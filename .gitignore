@@ -1,5 +1,9 @@
 book
 chromedriver
 chromedriver.exe
+msedgedriver
+msedgedriver.exe
+geckodriver
+geckodriver.exe
 mdbook
 mdbook.exe

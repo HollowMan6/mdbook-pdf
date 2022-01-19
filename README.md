@@ -1,7 +1,8 @@
 # mdbook-pdf
 
 [![last-commit](https://img.shields.io/github/last-commit/HollowMan6/mdbook-pdf)](https://github.com/HollowMan6/mdbook-pdf/graphs/commit-activity)
-![mdbook-pdf test](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20test/badge.svg)
+![mdbook-pdf Test on Chrome](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20Test%20on%20Chrome/badge.svg)
+![mdbook-pdf Test on Firefox](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20Test%20on%20Firefox/badge.svg)
 
 [![Followers](https://img.shields.io/github/followers/HollowMan6?style=social)](https://github.com/HollowMan6?tab=followers)
 [![watchers](https://img.shields.io/github/watchers/HollowMan6/mdbook-pdf?style=social)](https://github.com/HollowMan6/mdbook-pdf/watchers)
@@ -15,17 +16,14 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/context:python)
 
-A backend for mdbook written in Python for generating PDF based on [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF).
-
-[Python library dependency](https://github.com/HollowMan6/mdbook-pdf/network/dependencies)
+A backend for mdbook written in Python for generating PDF based on [W3C WebDriver Protocol](https://w3c.github.io/webdriver/#print-page).
 
 ## Usage
 
 Put [mdbook-pdf](mdbook-pdf) in PATH.
-Have google-chrome/chromium available (in PATH or location configured).
+Have google-chrome/chromium/firefox/edge available (in PATH or location configured).
 
-Ensure you have installed [python selenium library](https://github.com/HollowMan6/mdbook-pdf/network/dependencies),
-corresponding chromedriver is in PATH or in the book repo or location configured.
+Ensure corresponding webdriver is in PATH or in the book repo or location configured.
 
 Build it with `mdbook build` command.
 Make sure the following exists in your `book.toml`:
@@ -52,12 +50,10 @@ Check [book.toml](book.toml#L13) for available configurations of `[output.pdf]`.
 
 ## Known issue
 
-Sometimes the program may crash with errors like this:
+Sometimes the program may report the following error:
 
 ```bash
-selenium.common.exceptions.WebDriverException: Message: unknown error: session deleted because of page crash
-from unknown error: cannot determine loading status
-from tab crashed
+timeout: Timed out receiving message from renderer: 10.000
 ```
 
 This may be led by resources shortage, you can retry building it and there are chances for it to work.

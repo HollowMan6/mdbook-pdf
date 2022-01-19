@@ -1,0 +1,305 @@
+name: mdbook-pdf Test on Firefox
+
+on:
+  workflow_dispatch:  # Allow manual triggers
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - os: "macos-latest"
+              repo: "https://github.com/HollowMan6/mdbook-pdf"
+              dir: "."
+              name: "An_Example"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/HollowMan6/mdbook-pdf"
+              dir: "."
+              name: "An_Example"
+              backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/cargo"
+            #   dir: "cargo/src/doc"
+            #   name: "Cargo_Book"
+            #   backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/cargo"
+              dir: "cargo/src/doc"
+              name: "Cargo_Book"
+              backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/edition-guide"
+              dir: "edition-guide"
+              name: "Edition_Guide"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/edition-guide"
+              dir: "edition-guide"
+              name: "Edition_Guide"
+              backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-embedded/book"
+              dir: "book"
+              name: "Embedded_Rust_Book"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-embedded/book"
+              dir: "book"
+              name: "Embedded_Rust_Book"
+              backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/mdBook"
+              dir: "mdBook/guide"
+              name: "Mdbook_User_Guide"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/mdBook"
+              dir: "mdBook/guide"
+              name: "Mdbook_User_Guide"
+              backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/mdBook"
+              dir: "mdBook/test_book"
+              name: "Mdbook_Test_Book"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/mdBook"
+              dir: "mdBook/test_book"
+              name: "Mdbook_Test_Book"
+              backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/reference"
+            #   dir: "reference"
+            #   name: "Rust_Reference"
+            #   backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/reference"
+              dir: "reference"
+              name: "Rust_Reference"
+              backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/rust-by-example"
+            #   dir: "rust-by-example"
+            #   name: "Rust_By_Example"
+            #   backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/rust-by-example"
+              dir: "rust-by-example"
+              name: "Rust_By_Example"
+              backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/book"
+            #   dir: "book"
+            #   name: "Rust_Programming_Language"
+            #   backend-depends: ""
+            # - os: "ubuntu-latest"
+            #   repo: "https://github.com/rust-lang/book"
+            #   dir: "book"
+            #   name: "Rust_Programming_Language"
+            #   backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/rustc-dev-guide"
+            #   dir: "rustc-dev-guide"
+            #   name: "Rustc_Book"
+            #   backend-depends: "mdbook-linkcheck mdbook-toc"
+            # - os: "ubuntu-latest"
+            #   repo: "https://github.com/rust-lang/rustc-dev-guide"
+            #   dir: "rustc-dev-guide"
+            #   name: "Rustc_Book"
+            #   backend-depends: "mdbook-linkcheck mdbook-toc"
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/rust"
+              dir: "rust/src/doc/rustdoc"
+              name: "Rustdoc_Book"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/rust"
+              dir: "rust/src/doc/rustdoc"
+              name: "Rustdoc_Book"
+              backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/nomicon"
+              dir: "nomicon"
+              name: "Rust_Nomicon"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/nomicon"
+              dir: "nomicon"
+              name: "Rust_Nomicon"
+              backend-depends: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - uses: ueokande/setup-firefox@latest
+      - name: Set up geckodriver
+        run: |
+          VERSION="v0.30.0"
+          if [ "`uname -s`" == "Darwin" ]; then
+            wget https://github.com/mozilla/geckodriver/releases/download/${VERSION}/geckodriver-${VERSION}-macos.tar.gz
+          else
+            wget https://github.com/mozilla/geckodriver/releases/download/${VERSION}/geckodriver-${VERSION}-linux64.tar.gz
+          fi
+          tar -xf geckodriver-*.tar.gz
+          chmod +x geckodriver
+          mv geckodriver /usr/local/bin/
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - uses: actions-rs/toolchain@v1
+        if: matrix.backend-depends != ''
+        with:
+          toolchain: stable
+      - name: Install mdbook related backend
+        if: matrix.backend-depends != ''
+        run: |
+          cargo install ${{ matrix.backend-depends }}
+      - name: Download mdbook executable
+        run: |
+          if wget -O "/tmp/version" "https://api.github.com/repos/rust-lang/mdBook/releases/latest"; then
+            VERSION=`cat /tmp/version |  grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'`;
+          else
+            VERSION="v0.4.15";
+          fi;
+          if [ "`uname -s`" == "Darwin" ]; then
+            wget https://github.com/rust-lang/mdBook/releases/download/${VERSION}/mdbook-${VERSION}-x86_64-apple-darwin.tar.gz
+          else
+            wget https://github.com/rust-lang/mdBook/releases/download/${VERSION}/mdbook-${VERSION}-x86_64-unknown-linux-gnu.tar.gz
+          fi
+          tar -xf mdbook-*.tar.gz
+          chmod +x mdbook
+          mv mdbook /usr/local/bin/
+      - name: Install mdbook-pdf
+        run: |
+          chmod +x mdbook-pdf
+          mv mdbook-pdf /usr/local/bin/
+      - name: Build Test Docs for PDF
+        run: |
+          git clone ${{ matrix.repo }}
+          cd ${{ matrix.dir }}
+          if [ `grep -c "output.pdf" book.toml` -eq '0' ]; then
+            echo "[output.pdf]" >> book.toml
+            echo "page-width = 21" >> book.toml
+            echo "page-height = 29.7" >> book.toml
+          fi
+          mdbook build
+      - name: Upload PDF File to Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }}_${{ matrix.name }}
+          path: ${{ matrix.dir }}/book/pdf/*.pdf
+
+  # test-win:
+  #   strategy:
+  #       fail-fast: false
+  #       matrix:
+  #         include:
+  #           - repo: "https://github.com/rust-lang/cargo"
+  #             dir: "cargo/src/doc"
+  #             name: "Cargo_Book"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/edition-guide"
+  #             dir: "edition-guide"
+  #             name: "Edition_Guide"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-embedded/book"
+  #             dir: "book"
+  #             name: "Embedded_Rust_Book"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/mdBook"
+  #             dir: "mdBook/guide"
+  #             name: "Mdbook_User_Guide"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/mdBook"
+  #             dir: "mdBook/test_book"
+  #             name: "Mdbook_Test_Book"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/reference"
+  #             dir: "reference"
+  #             name: "Rust_Reference"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/rust-by-example"
+  #             dir: "rust-by-example"
+  #             name: "Rust_By_Example"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/book"
+  #             dir: "book"
+  #             name: "Rust_Programming_Language"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/rust"
+  #             dir: "rust/src/doc/rustdoc"
+  #             name: "Rustdoc_Book"
+  #             backend-depends: ""
+  #           - repo: "https://github.com/rust-lang/nomicon"
+  #             dir: "nomicon"
+  #             name: "Rust_Nomicon"
+  #             backend-depends: ""
+  #   runs-on: "windows-latest"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Set up Python 3.10
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: "3.10"
+  #     - uses: ueokande/setup-firefox@latest
+  #     - name: Set up geckodriver
+  #       run: |
+  #         $env:VERSION='v0.30.0'
+  #         (new-object System.Net.WebClient).DownloadFile("https://github.com/mozilla/geckodriver/releases/download/$env:VERSION/geckodriver-$env:VERSION-win64.zip", "$pwd\\geckodriver_exec.zip")
+  #         Expand-Archive geckodriver_exec.zip
+  #     - uses: actions/cache@v2
+  #       with:
+  #         path: ~/.cache/pip
+  #         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-pip-
+  #     - name: Install python dependencies
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install -r requirements.txt
+  #     - uses: actions-rs/toolchain@v1
+  #       if: matrix.backend-depends != ''
+  #       with:
+  #         toolchain: stable
+  #     - name: Install mdbook related backend
+  #       if: matrix.backend-depends != ''
+  #       run: |
+  #         cargo install ${{ matrix.backend-depends }}
+  #     - name: Download mdbook executable
+  #       run: |
+  #         $env:VERSION='v0.4.15'
+  #         (new-object System.Net.WebClient).DownloadFile("https://github.com/rust-lang/mdBook/releases/download/$env:VERSION/mdbook-$env:VERSION-x86_64-pc-windows-msvc.zip", "$pwd\\mdbook_exec.zip")
+  #         Expand-Archive mdbook_exec.zip
+  #     - name: Build Test Docs for PDF
+  #       run: |
+  #         git clone ${{ matrix.repo }}
+  #         $env:Path += ";$pwd\mdbook_exec"
+  #         $env:Path += ";$pwd\geckodriver_exec"
+  #         cp mdbook-pdf ${{ matrix.dir }}
+  #         cd ${{ matrix.dir }}
+  #         echo "[output.pdf]" >> book.toml
+  #         echo "command = 'python ../../mdbook-pdf'" >> book.toml
+  #         echo "page-width = 21" >> book.toml
+  #         echo "page-height = 29.7" >> book.toml
+  #         mdbook build
+  #     - name: Upload PDF File to Artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ${{ runner.os }}_${{ matrix.name }}
+  #         path: ${{ matrix.dir }}/book/pdf/*.pdf

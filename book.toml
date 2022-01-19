@@ -13,21 +13,19 @@ enable = true
 [output.pdf]
 # # For Windows only
 # command = 'python ../../mdbook-pdf'
-chrome-driver-path = ""
-chrome-binary-path = ""
-# https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
-landscape = false
-display-header-footer = true
-print-background = true
+web-driver-path = ""
+web-binary-path = ""
+# https://w3c.github.io/webdriver/#print-page
+orientation = "portrait"
 scale = 1
-paper-width = 8
-paper-height = 10
-margin-top = 0.5
-margin-bottom = 0.5
-margin-left = 0.5
-margin-right = 0.5
-page-ranges = ""
-ignore-invalid-page-ranges = false
-header-template = "<h3 style='font-size:5px; margin-left: 48%' class='title'></h3>"
-footer-template = "<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>"
-prefer-c-s-s-page-size = true
+background = true
+page = "{}"
+page-width = 21
+page-height = 29.7
+margin = "{}"
+margin-top = 1
+margin-bottom = 1
+margin-left = 1
+margin-right = 1
+shrink-to-fit = true
+page-ranges = "[]"

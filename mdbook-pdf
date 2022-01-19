@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from base64 import b64decode
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+import urllib3
+import subprocess
 import time
 import os
 import json
@@ -10,10 +10,9 @@ help_notice = '''
 Usage:
 
 Put this script in PATH.
-Have google-chrome/chromium available (in PATH or location configured).
+Have google-chrome/chromium/firefox/edge available (in PATH or location configured).
 
-Ensure you have installed python selenium library,
-corresponding chromedriver is in PATH or in the book repo or location configured.
+Ensure corresponding webdriver is in PATH or in the book repo or location configured.
 
 Build it with `mdbook build` command.
 Make sure the following exists in your `book.toml`:
@@ -65,59 +64,109 @@ if __name__ == '__main__':
 
     params = config['config']['output']['pdf']
 
-    potential_chrome_driver = os.path.join(root_dir, 'chromedriver')
-    if os.name == 'nt':
-        potential_chrome_driver += '.exe'
-    chrome_driver = ''
-    if 'chrome-driver-path' in params.keys():
-        if params['chrome-driver-path']:
-            chrome_driver = os.path.abspath(os.path.expandvars(
-                os.path.expanduser(params['chrome-driver-path'])))
-    if not chrome_driver and os.path.exists(potential_chrome_driver) and os.path.isfile(potential_chrome_driver):
-        chrome_driver = potential_chrome_driver
+    webdriver = ''
+    if 'web-driver-path' in params.keys():
+        if params['web-driver-path']:
+            webdriver = os.path.abspath(os.path.expandvars(
+                os.path.expanduser(params['web-driver-path'])))
 
-    chrome_binary = ''
-    if 'chrome-binary-path' in params.keys():
-        if params['chrome-binary-path']:
-            chrome_binary = os.path.abspath(os.path.expandvars(
-                os.path.expanduser(params['chrome-binary-path'])))
+    webdriver_name = ['chromedriver', 'geckodriver', 'msedgedriver']
+    for name in webdriver_name:
+        potential_webdriver = os.path.join(root_dir, name)
+        if os.name == 'nt':
+            potential_webdriver += '.exe'
+        if not webdriver and os.path.exists(potential_webdriver) and os.path.isfile(potential_webdriver):
+            webdriver = potential_webdriver
+            break
+
+    browser_binary = ''
+    if 'web-binary-path' in params.keys():
+        if params['web-binary-path']:
+            browser_binary = os.path.abspath(os.path.expandvars(
+                os.path.expanduser(params['web-binary-path'])))
 
     source_file = os.path.join(os.path.dirname(
         destination), 'html', 'print.html')
 
-    settings = {}
+    # https://w3c.github.io/webdriver/#print-page
+    settings = {
+        "orientation": "portrait",
+        "scale": 1,
+        "background": True,
+        "page": {},
+        "pageWidth": 21.59,
+        "pageHeight": 27.94,
+        "margin": {},
+        "marginTop": 1,
+        "marginBottom": 1,
+        "marginLeft": 1,
+        "marginRight": 1,
+        "shrinkToFit": True,
+        "pageRanges": []
+    }
 
-    # https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
-    config_items = [
-        'landscape',
-        'displayHeaderFooter',
-        'printBackground',
-        'scale',
-        'paperWidth',
-        'paperHeight',
-        'marginTop',
-        'marginBottom',
-        'marginLeft',
-        'marginRight',
-        'pageRanges',
-        'ignoreInvalidPageRanges',
-        'headerTemplate',
-        'footerTemplate',
-        'preferCSSPageSize']
+    config_items_json = [
+        "page",
+        "margin",
+        "pageRanges"
+    ]
 
     # Load configs from book.toml
-    for item in config_items:
+    for item in settings.keys():
         camel_item = camel2dash(item)
         if camel_item in params.keys():
-            settings[item] = params[camel_item]
+            if item in config_items_json:
+                settings[item] = json.loads(params[camel_item])
+            else:
+                settings[item] = params[camel_item]
 
-    chrome_options = webdriver.ChromeOptions()
-    if chrome_binary:
-        chrome_options.binary_location = chrome_binary
-    chrome_options.headless = True
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    chrome_options.add_argument('--unlimited-storage')
+    # https://github.com/puppeteer/puppeteer/blob/083ea41e943e2a20014279fcfceb23c98a1e4491/src/node/Launcher.ts#L168
+    DEFAULT_ARGS = [
+        # suppresses Save Password prompt window
+        "--enable-automation",
+        # do not block popups
+        "--disable-popup-blocking",
+        # Disable all chrome extensions entirely
+        "--disable-extensions",
+        # Disable various background network services, including extension updating,
+        #   safe browsing service, upgrade detector, translate, UMA
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        # Disable syncing to a Google account
+        "--disable-sync",
+        # Disable reporting to UMA, but allows for collection
+        "--metrics-recording-only",
+        # Disable installation of default apps on first run
+        "--disable-default-apps",
+        # Mute any audio
+        "--mute-audio",
+        # Skip first run wizards
+        "--no-first-run",
+        "--no-default-browser-check",
+        # chromedriver flags
+        "--disable-hang-monitor",
+        "--disable-prompt-on-repost",
+        "--disable-client-side-phishing-detection",
+        "--password-store=basic",
+        "--use-mock-keychain",
+        "--disable-component-extensions-with-background-pages",
+        "--disable-breakpad",
+        "--disable-dev-shm-usage",
+        "--disable-ipc-flooding-protection",
+        "--disable-renderer-backgrounding",
+        "--force-fieldtrials=*BackgroundTracing/default/",
+        "--enable-features=NetworkService,NetworkServiceInProcess",
+        "--unlimited-storage",
+        "--disable-web-security",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-gpu",
+        "--headless",
+        # `site-per-process` affects `page.frames()`, see #4471
+        # `TranslateUI` disables built-in Google Translate service
+        "--disable-features=site-per-process,TranslateUI,BlinkGenPropertyTrees"
+    ]
 
     success = False
     # Ensure printing.html is available
@@ -136,23 +185,105 @@ if __name__ == '__main__':
             'Time out for finding printing.html! \nPlease ensure that in book.toml:\n\n[output.html.print]\n\nenable = true')
         exit(1)
 
+    webdriver_config = {
+        "capabilities": {
+            "alwaysMatch": {
+                "goog:chromeOptions": {
+                    "binary": browser_binary,
+                    "args": DEFAULT_ARGS,
+                },
+                "moz:firefoxOptions": {
+                    "args": DEFAULT_ARGS,
+                },
+                "ms:edgeOptions": {
+                    "binary": browser_binary,
+                    "args": DEFAULT_ARGS,
+                }
+            }
+        }
+    }
+
+    if "firefox" in browser_binary.lower():
+        webdriver_config["capabilities"]["alwaysMatch"]["moz:firefoxOptions"]["binary"] = browser_binary
+
     success = False
     # Hope to fix unknown error: session deleted because of page crash
     for i in range(20):
-        if chrome_driver:
-            driver = webdriver.Chrome(service=Service(
-                chrome_driver), options=chrome_options)
+        driver_base_url = 'http://127.0.0.1:'
+        subp = None
+        if not webdriver:
+            for name in webdriver_name:
+                try:
+                    subp = subprocess.Popen(name, stdout=subprocess.PIPE)
+                    break
+                except FileNotFoundError:
+                    pass
         else:
-            driver = webdriver.Chrome(options=chrome_options)
-        driver.get(f'file://{source_file}')
+            subp = subprocess.Popen(webdriver, stdout=subprocess.PIPE)
+        if not subp:
+            print('No Webdriver Available!')
+            exit(1)
+        while True:
+            subp_return = subp.stdout.readline().decode('utf-8').strip()
+            if subp_return:
+                break
+
+        subp_return = subp_return.split(' ')
+        address = subp_return[-1].strip()
+        if address.isdigit():
+            driver_base_url += address
+        else:
+            if ":" in address:
+                driver_base_url = "http://" + address
+            else:
+                driver_base_url += "4444"
+
+        time.sleep(2)
+        http = urllib3.PoolManager()
+        encoded_data = json.dumps(webdriver_config)
+        resp = http.request('POST', driver_base_url +
+                            '/session', body=encoded_data)
+        session_data = json.loads(resp.data.decode('utf-8'))
+
+        if resp.status == 200:
+            session_id = session_data['value']['sessionId']
+        else:
+            raise Exception(resp.data.decode('utf-8'))
+
+        data = {
+            "url": f'file://{source_file}'
+        }
+        encoded_data = json.dumps(data)
+        resp = http.request('POST', driver_base_url +
+                            '/session/' + session_id + '/url', body=encoded_data)
+
+        if not resp.status == 200:
+            raise Exception(resp.data.decode('utf-8'))
+
+        time.sleep(5)
+
+        encoded_data = json.dumps(settings)
+
         try:
-            data = driver.execute_cdp_cmd("Page.printToPDF", settings)['data']
+            resp = http.request(
+                'POST', driver_base_url + '/session/' + session_id + '/print', body=encoded_data)
+
+            if not resp.status == 200:
+                raise Exception(resp.data.decode('utf-8'))
             success = True
-            break
+            data = json.loads(resp.data.decode('utf-8'))['value']
         except Exception as e:
             print(e)
-            driver.quit()
+        finally:
+            resp = http.request('DELETE', driver_base_url +
+                                '/session/' + session_id)
+            if not resp.status == 200:
+                raise Exception(resp.data.decode('utf-8'))
+            subp.kill()
+            if success:
+                break
             time.sleep(2)
+
     if not success:
         print(
             'Maybe you have a memory shortage or something wrong with your chrome driver, you can try to re-run it.')
@@ -166,7 +297,6 @@ if __name__ == '__main__':
     # Moreover, if you get Base64 from an untrusted source, you must sanitize the PDF contents
     if bytes[0:4] != b'%PDF':
         print('ValueError: Missing the PDF file signature!')
-        driver.quit()
         exit(1)
 
     # Write the PDF contents to a local file
@@ -174,4 +304,3 @@ if __name__ == '__main__':
         f.write(bytes)
 
     print("PDF file saved to: " + saving_path)
-    driver.quit()

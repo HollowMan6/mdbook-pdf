@@ -1,4 +1,4 @@
-name: mdbook-pdf test
+name: mdbook-pdf Test on Chrome
 
 on:
   workflow_dispatch:  # Allow manual triggers
@@ -28,31 +28,31 @@ jobs:
             #   dir: "cargo/src/doc"
             #   name: "Cargo_Book"
             #   backend-depends: ""
-            # - os: "ubuntu-latest"
-            #   repo: "https://github.com/rust-lang/cargo"
-            #   dir: "cargo/src/doc"
-            #   name: "Cargo_Book"
-            #   backend-depends: ""
-            # - os: "macos-latest"
-            #   repo: "https://github.com/rust-lang/edition-guide"
-            #   dir: "edition-guide"
-            #   name: "Edition_Guide"
-            #   backend-depends: ""
-            # - os: "ubuntu-latest"
-            #   repo: "https://github.com/rust-lang/edition-guide"
-            #   dir: "edition-guide"
-            #   name: "Edition_Guide"
-            #   backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/cargo"
+              dir: "cargo/src/doc"
+              name: "Cargo_Book"
+              backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/edition-guide"
+              dir: "edition-guide"
+              name: "Edition_Guide"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/edition-guide"
+              dir: "edition-guide"
+              name: "Edition_Guide"
+              backend-depends: ""
             - os: "macos-latest"
               repo: "https://github.com/rust-embedded/book"
               dir: "book"
               name: "Embedded_Rust_Book"
               backend-depends: ""
-            # - os: "ubuntu-latest"
-            #   repo: "https://github.com/rust-embedded/book"
-            #   dir: "book"
-            #   name: "Embedded_Rust_Book"
-            #   backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-embedded/book"
+              dir: "book"
+              name: "Embedded_Rust_Book"
+              backend-depends: ""
             - os: "macos-latest"
               repo: "https://github.com/rust-lang/mdBook"
               dir: "mdBook/guide"
@@ -83,21 +83,21 @@ jobs:
             #   dir: "reference"
             #   name: "Rust_Reference"
             #   backend-depends: ""
-            - os: "macos-latest"
-              repo: "https://github.com/rust-lang/rust-by-example"
-              dir: "rust-by-example"
-              name: "Rust_By_Example"
-              backend-depends: ""
-            - os: "ubuntu-latest"
-              repo: "https://github.com/rust-lang/rust-by-example"
-              dir: "rust-by-example"
-              name: "Rust_By_Example"
-              backend-depends: ""
-            - os: "macos-latest"
-              repo: "https://github.com/rust-lang/book"
-              dir: "book"
-              name: "Rust_Programming_Language"
-              backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/rust-by-example"
+            #   dir: "rust-by-example"
+            #   name: "Rust_By_Example"
+            #   backend-depends: ""
+            # - os: "ubuntu-latest"
+            #   repo: "https://github.com/rust-lang/rust-by-example"
+            #   dir: "rust-by-example"
+            #   name: "Rust_By_Example"
+            #   backend-depends: ""
+            # - os: "macos-latest"
+            #   repo: "https://github.com/rust-lang/book"
+            #   dir: "book"
+            #   name: "Rust_Programming_Language"
+            #   backend-depends: ""
             # - os: "ubuntu-latest"
             #   repo: "https://github.com/rust-lang/book"
             #   dir: "book"
@@ -113,26 +113,26 @@ jobs:
             #   dir: "rustc-dev-guide"
             #   name: "Rustc_Book"
             #   backend-depends: "mdbook-linkcheck mdbook-toc"
-            # - os: "macos-latest"
-            #   repo: "https://github.com/rust-lang/rust"
-            #   dir: "rust/src/doc/rustdoc"
-            #   name: "Rustdoc_Book"
-            #   backend-depends: ""
-            # - os: "ubuntu-latest"
-            #   repo: "https://github.com/rust-lang/rust"
-            #   dir: "rust/src/doc/rustdoc"
-            #   name: "Rustdoc_Book"
-            #   backend-depends: ""
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang/rust"
+              dir: "rust/src/doc/rustdoc"
+              name: "Rustdoc_Book"
+              backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/rust"
+              dir: "rust/src/doc/rustdoc"
+              name: "Rustdoc_Book"
+              backend-depends: ""
             - os: "macos-latest"
               repo: "https://github.com/rust-lang/nomicon"
               dir: "nomicon"
               name: "Rust_Nomicon"
               backend-depends: ""
-            # - os: "ubuntu-latest"
-            #   repo: "https://github.com/rust-lang/nomicon"
-            #   dir: "nomicon"
-            #   name: "Rust_Nomicon"
-            #   backend-depends: ""
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang/nomicon"
+              dir: "nomicon"
+              name: "Rust_Nomicon"
+              backend-depends: ""
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -184,14 +184,8 @@ jobs:
           cd ${{ matrix.dir }}
           if [ `grep -c "output.pdf" book.toml` -eq '0' ]; then
             echo "[output.pdf]" >> book.toml
-            echo "display-header-footer = true" >> book.toml
-            echo "print-background = true" >> book.toml
-            echo "paper-width = 8" >> book.toml
-            echo "paper-height = 10" >> book.toml
-            echo "margin-top = 0.5" >> book.toml
-            echo "margin-bottom = 0.5" >> book.toml
-            echo "margin-left = 0.5" >> book.toml
-            echo "margin-right = 0.5" >> book.toml
+            echo "page-width = 21" >> book.toml
+            echo "page-height = 29.7" >> book.toml
           fi
           mdbook build
       - name: Upload PDF File to Artifact
@@ -205,18 +199,18 @@ jobs:
         fail-fast: false
         matrix:
           include:
-            # - repo: "https://github.com/rust-lang/cargo"
-            #   dir: "cargo/src/doc"
-            #   name: "Cargo_Book"
-            #   backend-depends: ""
-            # - repo: "https://github.com/rust-lang/edition-guide"
-            #   dir: "edition-guide"
-            #   name: "Edition_Guide"
-            #   backend-depends: ""
-            # - repo: "https://github.com/rust-embedded/book"
-            #   dir: "book"
-            #   name: "Embedded_Rust_Book"
-            #   backend-depends: ""
+            - repo: "https://github.com/rust-lang/cargo"
+              dir: "cargo/src/doc"
+              name: "Cargo_Book"
+              backend-depends: ""
+            - repo: "https://github.com/rust-lang/edition-guide"
+              dir: "edition-guide"
+              name: "Edition_Guide"
+              backend-depends: ""
+            - repo: "https://github.com/rust-embedded/book"
+              dir: "book"
+              name: "Embedded_Rust_Book"
+              backend-depends: ""
             - repo: "https://github.com/rust-lang/mdBook"
               dir: "mdBook/guide"
               name: "Mdbook_User_Guide"
@@ -229,26 +223,22 @@ jobs:
             #   dir: "reference"
             #   name: "Rust_Reference"
             #   backend-depends: ""
-            - repo: "https://github.com/rust-lang/rust-by-example"
-              dir: "rust-by-example"
-              name: "Rust_By_Example"
-              backend-depends: ""
+            # - repo: "https://github.com/rust-lang/rust-by-example"
+            #   dir: "rust-by-example"
+            #   name: "Rust_By_Example"
+            #   backend-depends: ""
             # - repo: "https://github.com/rust-lang/book"
             #   dir: "book"
             #   name: "Rust_Programming_Language"
             #   backend-depends: ""
-            # - repo: "https://github.com/rust-lang/rustc-dev-guide"
-            #   dir: "rustc-dev-guide"
-            #   name: "Rustc_Book"
-            #   backend-depends: "mdbook-linkcheck mdbook-toc"
-            # - repo: "https://github.com/rust-lang/rust"
-            #   dir: "rust/src/doc/rustdoc"
-            #   name: "Rustdoc_Book"
-            #   backend-depends: ""
-            # - repo: "https://github.com/rust-lang/nomicon"
-            #   dir: "nomicon"
-            #   name: "Rust_Nomicon"
-            #   backend-depends: ""
+            - repo: "https://github.com/rust-lang/rust"
+              dir: "rust/src/doc/rustdoc"
+              name: "Rustdoc_Book"
+              backend-depends: ""
+            - repo: "https://github.com/rust-lang/nomicon"
+              dir: "nomicon"
+              name: "Rust_Nomicon"
+              backend-depends: ""
     runs-on: "windows-latest"
     steps:
       - uses: actions/checkout@v2
@@ -288,14 +278,8 @@ jobs:
           cd ${{ matrix.dir }}
           echo "[output.pdf]" >> book.toml
           echo "command = 'python ../../mdbook-pdf'" >> book.toml
-          echo "display-header-footer = true" >> book.toml
-          echo "print-background = true" >> book.toml
-          echo "paper-width = 8" >> book.toml
-          echo "paper-height = 10" >> book.toml
-          echo "margin-top = 0.5" >> book.toml
-          echo "margin-bottom = 0.5" >> book.toml
-          echo "margin-left = 0.5" >> book.toml
-          echo "margin-right = 0.5" >> book.toml
+          echo "page-width = 21" >> book.toml
+          echo "page-height = 29.7" >> book.toml
           mdbook build
       - name: Upload PDF File to Artifact
         uses: actions/upload-artifact@v2
