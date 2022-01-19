@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+from base64 import b64decode
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+import time
+import os
+import json
+
+help_notice = '''
+Usage:
+
+Put this script in PATH.
+Have google-chrome/chromium available (in PATH or location configured).
+
+Ensure you have installed python selenium library,
+corresponding chromedriver is in PATH or in the book repo or location configured.
+
+Build it with `mdbook build` command.
+Make sure the following exists in your `book.toml`:
+
+```toml
+[output.html]
+
+[output.html.print]
+enable = true
+
+[output.pdf]
+```
+
+if you are using Windows, Put this script in the book repo,
+add the following line to `[output.pdf]` in your `book.toml`:
+
+```toml
+command = "python ../../mdbook-pdf"
+```
+'''
+
+
+def camel2dash(string):
+    new_string = ''
+    for letter in string:
+        if letter.isupper():
+            new_string += '-' + letter.lower()
+        else:
+            new_string += letter
+    return new_string
+
+
+if __name__ == '__main__':
+    config = json.loads(input())
+
+    if 'html' not in config['config']['output'].keys():
+        print(
+            'HTML backend not specified! \nPlease specify it in the book.toml: \n\n[output.html]')
+        exit(1)
+
+    root_dir = config['root']
+
+    title = 'output'
+    if 'title' in config['config']['book'].keys():
+        title = config['config']['book']['title']
+    destination = config['destination']
+
+    saving_path = os.path.join(config['destination'], title + '.pdf')
+
+    params = config['config']['output']['pdf']
+
+    potential_chrome_driver = os.path.join(root_dir, 'chromedriver')
+    if os.name == 'nt':
+        potential_chrome_driver += '.exe'
+    chrome_driver = ''
+    if 'chrome-driver-path' in params.keys():
+        if params['chrome-driver-path']:
+            chrome_driver = os.path.abspath(os.path.expandvars(
+                os.path.expanduser(params['chrome-driver-path'])))
+    if not chrome_driver and os.path.exists(potential_chrome_driver) and os.path.isfile(potential_chrome_driver):
+        chrome_driver = potential_chrome_driver
+
+    chrome_binary = ''
+    if 'chrome-binary-path' in params.keys():
+        if params['chrome-binary-path']:
+            chrome_binary = os.path.abspath(os.path.expandvars(
+                os.path.expanduser(params['chrome-binary-path'])))
+
+    source_file = os.path.join(os.path.dirname(
+        destination), 'html', 'print.html')
+
+    settings = {}
+
+    # https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
+    config_items = [
+        'landscape',
+        'displayHeaderFooter',
+        'printBackground',
+        'scale',
+        'paperWidth',
+        'paperHeight',
+        'marginTop',
+        'marginBottom',
+        'marginLeft',
+        'marginRight',
+        'pageRanges',
+        'ignoreInvalidPageRanges',
+        'headerTemplate',
+        'footerTemplate',
+        'preferCSSPageSize']
+
+    # Load configs from book.toml
+    for item in config_items:
+        camel_item = camel2dash(item)
+        if camel_item in params.keys():
+            settings[item] = params[camel_item]
+
+    chrome_options = webdriver.ChromeOptions()
+    if chrome_binary:
+        chrome_options.binary_location = chrome_binary
+    chrome_options.headless = True
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--unlimited-storage')
+
+    success = False
+    # Ensure printing.html is available
+    for i in range(20):
+        if os.path.exists(source_file) and os.path.isfile(source_file):
+            try:
+                with open(source_file, 'r') as f:
+                    success = True
+                    break
+            except Exception:
+                pass
+        time.sleep(2)
+
+    if not success:
+        print(
+            'Time out for finding printing.html! \nPlease ensure that in book.toml:\n\n[output.html.print]\n\nenable = true')
+        exit(1)
+
+    success = False
+    # Hope to fix unknown error: session deleted because of page crash
+    for i in range(20):
+        if chrome_driver:
+            driver = webdriver.Chrome(service=Service(
+                chrome_driver), options=chrome_options)
+        else:
+            driver = webdriver.Chrome(options=chrome_options)
+        driver.get(f'file://{source_file}')
+        try:
+            data = driver.execute_cdp_cmd("Page.printToPDF", settings)['data']
+            success = True
+            break
+        except Exception as e:
+            print(e)
+            driver.quit()
+            time.sleep(2)
+    if not success:
+        print(
+            'Maybe you have a memory shortage or something wrong with your chrome driver, you can try to re-run it.')
+        exit(1)
+
+    # Decode the Base64 string, making sure that it contains only valid characters
+    bytes = b64decode(data, validate=True)
+
+    # Perform a basic validation to make sure that the result is a valid PDF file
+    # Be aware! The magic number (file signature) is not 100% reliable solution to validate PDF files
+    # Moreover, if you get Base64 from an untrusted source, you must sanitize the PDF contents
+    if bytes[0:4] != b'%PDF':
+        print('ValueError: Missing the PDF file signature!')
+        driver.quit()
+        exit(1)
+
+    # Write the PDF contents to a local file
+    with open(saving_path, 'wb') as f:
+        f.write(bytes)
+
+    print("PDF file saved to: " + saving_path)
+    driver.quit()
