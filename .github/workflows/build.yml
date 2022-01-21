@@ -1,0 +1,44 @@
+name: mdbook-pdf build
+
+on:
+  workflow_dispatch:  # Allow manual triggers
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+        fail-fast: false
+        matrix:
+          os: ["macos-latest", "ubuntu-latest", "windows-latest"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - uses: Swatinem/rust-cache@v1
+      - name: Build mdbook-pdf Release
+        run: |
+          cargo build --release
+      - name: macOS Upload Binary File to Artifact
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: mdbook-v0.1.0-x86_64-apple-darwin
+          path: target/release/mdbook-pdf
+      - name: Linux Upload Binary File to Artifact
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: mdbook-v0.1.0-x86_64-unknown-linux-gnu
+          path: target/release/mdbook-pdf
+      - name: Windows Upload Binary File to Artifact
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: mdbook-v0.1.0-x86_64-pc-windows-msvc
+          path: target/release/mdbook-pdf.exe

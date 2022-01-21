@@ -1,0 +1,22 @@
+[package]
+name = "mdbook-pdf"
+version = "0.1.0"
+authors = ["Hollow Man <hollowman@opensuse.org>"]
+edition = "2021"
+description = "A backend for mdBook written in Rust for generating PDF based on headless chrome and Chrome DevTools Protocol"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/HollowMan6/mdbook-pdf"
+keywords = ["book", "mdbook", "rustbook", "pdf"]
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# # Wait for automatic chrome download to be available: https://github.com/atroche/rust-headless-chrome/issues/286
+# headless_chrome = { git = "https://github.com/atroche/rust-headless-chrome", branch = "master", features= ["fetch"] }
+
+# A forked version with my patches.
+headless_chrome = { git = "https://github.com/HollowMan6/rust-headless-chrome" }
+mdbook = "0.4.15"
+serde = "1.0.134"
+serde_derive = "1.0.134"
