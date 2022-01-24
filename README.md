@@ -25,6 +25,10 @@ Then run `cargo build --release` in this folder, get the executable in `target/r
 
 For running, have Google Chrome / Chromium / Microsoft Edge available (installed at the default location, in PATH or binary location configured) as currently, automatically downloading Chromium binary [isn't available](https://github.com/atroche/rust-headless-chrome/issues/286).
 
+- On Windows 10 and above, the program can generate PDF normally without installing any additional software, because Microsoft Edge is the browser provided with Windows system. Of course, considering the support for the old versions of Windows without Edge, you can install Google Chrome on your computer.
+- In MacOS, you need to install [Google Chrome](https://www.google.com/chrome/).
+- In Linux, you can choose to install any of the Google Chrome / Chromium / Microsoft Edge browsers. It is recommended to install Chromium. The name of this software package in your Linux distribution is commonly `chromium` or `chromium-browser` (Note: for Ubuntu later than 18.04, you have to install `chromium-browser` through `snap`).
+
 Make sure the following exists in your `book.toml`:
 
 ```toml
@@ -48,4 +52,4 @@ Support customize PDF paper orientation, scale of the webpage rendering, paper w
 Check [book.toml](test_doc/book.toml#L10-L33) for details for the available configurations of `[output.pdf]`.
 
 ## Crates.io
-This package won't be published to [crates.io](https://crates.io) as one of the dependencies applies patches from the [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome).
+This package currently won't be published to [crates.io](https://crates.io) as one of the dependencies applies patches from the [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome).

@@ -60,7 +60,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let launch_opts = LaunchOptionsBuilder::default()
             .headless(true)
             .sandbox(false)
-            .ignore_certificate_errors(false)
+            .ignore_certificate_errors(true)
             .idle_browser_timeout(Duration::from_secs(u64::max_value()))
             .path(browser_binary)
             .args(vec![

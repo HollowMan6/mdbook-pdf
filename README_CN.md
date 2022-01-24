@@ -15,6 +15,8 @@
 
 [English](README.md)
 
+[v0.1.0开发文档](https://openeuler.feishu.cn/docs/doccnQFaB5OLABMDjhWSE1siX5b#)
+
 用 Rust 编写的 [mdBook](https://github.com/rust-lang/mdBook) 后端，基于[headless chrome](https://github.com/atroche/rust-headless-chrome)和[Chrome开发工具协议](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)生成PDF。
 
 ## 用法
@@ -23,6 +25,10 @@
 否则，请确保 Rust 编译环境可用（`cargo build`），然后在此文件夹中运行`cargo build --release`，在`target/release/`中获取可执行文件，并将其放入PATH。
 
 为了使得程序能够正常运行，请确保计算机上安装了 Google Chrome / Chromium / Microsoft Edge，（安装在默认的位置，在当前的PATH中，或配置了二进制文件位置），因为现在自动下载 Chromium 功能还[不可用](https://github.com/atroche/rust-headless-chrome/issues/286).
+
+- 在Windows 10及以上该程序无需安装任何额外软件即可正常生成 PDF，因为 Microsoft Edge 是 Windows 系统自带的浏览器。当然如果考虑到对没有自带安装 Edge 的老版本Windows的支持，在电脑上安装一个 Google Chrome 即可。
+- 在 macOS 中需要下载并安装 [Google Chrome](https://www.google.com/chrome/)。
+- 在 Linux 中安装Google Chrome / Chromium / Microsoft Edge 浏览器中的任意一个即可，推荐安装 Chromium，该软件包在您的发行版中一般名称为 `chromium` 或 `chromium-browser`（注意，在 Ubuntu 18.04 之后需要通过 `snap` 安装 `chromium-browser`）。
 
 请确保您的`book.toml`中存在以下内容:
 
@@ -47,4 +53,4 @@ enable = true
 查看 [book.toml](test_doc/book.toml#L10-L33) 以了解 `[output.pdf]` 可用配置的详细信息。
 
 ## Crates.io
-由于本软件的依赖使用了来自 [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome) 的补丁，因而不会在 [crates.io](https://crates.io) 中发布。
+由于本软件的依赖使用了来自 [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome) 的补丁，因而目前不会在 [crates.io](https://crates.io) 中发布。

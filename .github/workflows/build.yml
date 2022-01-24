@@ -12,14 +12,11 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
+          version: ["0.1.0"]
           os: ["macos-latest", "ubuntu-latest", "windows-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
       - uses: Swatinem/rust-cache@v1
       - name: Build mdbook-pdf Release
         run: |
@@ -28,17 +25,37 @@ jobs:
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v2
         with:
-          name: mdbook-v0.1.0-x86_64-apple-darwin
+          name: mdbook-pdf-v${{ matrix.version }}-x86_64-apple-darwin
           path: target/release/mdbook-pdf
       - name: Linux Upload Binary File to Artifact
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
         with:
-          name: mdbook-v0.1.0-x86_64-unknown-linux-gnu
+          name: mdbook-pdf-v${{ matrix.version }}-x86_64-unknown-linux-gnu
           path: target/release/mdbook-pdf
       - name: Windows Upload Binary File to Artifact
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v2
         with:
-          name: mdbook-v0.1.0-x86_64-pc-windows-msvc
+          name: mdbook-pdf-v${{ matrix.version }}-x86_64-pc-windows-msvc
           path: target/release/mdbook-pdf.exe
+
+  build-aarch64-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          echo '#!/bin/bash' >> script.sh
+          echo "cd /build" >> script.sh
+          echo "cargo build --release" >> script.sh
+          chmod +x script.sh
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@master
+      - name: Build mdbook-pdf Release
+        run: |
+          docker run -i -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static -v `pwd`:/build --platform arm64 rust /build/script.sh
+      - name: Upload Binary File to Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: mdbook-pdf-v0.1.0-aarch64-unknown-linux-gnu
+          path: target/release/mdbook-pdf
