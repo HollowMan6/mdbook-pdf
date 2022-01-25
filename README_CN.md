@@ -53,4 +53,4 @@ enable = true
 查看 [book.toml](test_doc/book.toml#L10-L33) 以了解 `[output.pdf]` 可用配置的详细信息。
 
 ## Crates.io
-由于本软件的依赖使用了来自 [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome) 的补丁，因而目前不会在 [crates.io](https://crates.io) 中发布。
+由于本软件的依赖使用了来自 [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome) 的补丁，并且[该补丁并不会被合并](https://github.com/atroche/rust-headless-chrome/issues/287)，因而目前不会在 [crates.io](https://crates.io) 中发布。

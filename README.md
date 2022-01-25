@@ -52,4 +52,4 @@ Support customize PDF paper orientation, scale of the webpage rendering, paper w
 Check [book.toml](test_doc/book.toml#L10-L33) for details for the available configurations of `[output.pdf]`.
 
 ## Crates.io
-This package currently won't be published to [crates.io](https://crates.io) as one of the dependencies applies patches from the [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome).
+This package currently won't be published to [crates.io](https://crates.io) as one of the dependencies applies patches from the [headless chrome GitHub fork](https://github.com/HollowMan6/rust-headless-chrome), and the patches [won't be merged to upstream](https://github.com/atroche/rust-headless-chrome/issues/287).

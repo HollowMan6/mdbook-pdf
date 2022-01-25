@@ -12,7 +12,7 @@ title = "An Example"
 # trying-times = 1
 ## This backend only support latest Chromium based browsers, not Safari and Firefox currently.
 ## If needed, please specify the full path.
-## If you specify the wrong binary, chances are that this program will never end.
+## If you specify the wrong binary, chances are that there will be a timeout error.
 # browser-binary-path = ""
 ## Check Chrome Devtools Protocol Docs for the explanation of the following params:
 ## https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF

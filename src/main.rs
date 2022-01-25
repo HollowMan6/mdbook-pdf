@@ -61,7 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .headless(true)
             .sandbox(false)
             .ignore_certificate_errors(true)
-            .idle_browser_timeout(Duration::from_secs(u64::max_value()))
+            .idle_browser_timeout(Duration::from_secs(600))
             .path(browser_binary)
             .args(vec![
                 OsStr::new("--unlimited-storage"),
