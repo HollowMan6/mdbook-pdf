@@ -16,7 +16,7 @@ readme = "README.md"
 # headless_chrome = { git = "https://github.com/atroche/rust-headless-chrome", branch = "master", features= ["fetch"] }
 
 # A forked version to expand some response timeout to 300 seconds.
-headless_chrome = { git = "https://github.com/HollowMan6/rust-headless-chrome" }
+mdbook-pdf-headless_chrome = "0.1.0"
 mdbook = "0.4.15"
-serde = "1.0.134"
-serde_derive = "1.0.134"
+serde = "1.0.136"
+serde_derive = "1.0.136"
