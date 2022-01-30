@@ -17,19 +17,23 @@
 
 [中文](README_CN.md)
 
+[Blog](https://hollowmansblog.wordpress.com/2022/01/30/mdbook-pdf-a-mdbook-backend-for-generating-pdf-files/)
+
 A backend for [mdBook](https://github.com/rust-lang/mdBook) written in Rust for generating PDF based on [headless chrome](https://github.com/atroche/rust-headless-chrome) and [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF).
 
-## Usage
-If your machine's architecture is `x86_64`, or you are using Linux for `Arm64`, check the successful [build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess), click into the latest one, and then you can get a binary from the Artifacts (including `Windows`, `Linux`, `macOS`).
+## Installation & Usage
+Since it's a plugin (backend) for [mdBook](https://github.com/rust-lang/mdBook), first of all you should ensure that `mdbook` is available.
 
-Otherwise, execute `cargo install mdbook-pdf` to compile and install.
+If your machine's architecture is `x86_64`, or you are using Linux for `ARM64`, check the successful [build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess), click into the latest one, and then you can get a binary from the Artifacts (including `Windows`, `Linux`, `macOS`).
+
+Otherwise, make sure the [rust compiling environment](https://www.rust-lang.org/tools/install) is available, execute `cargo install mdbook-pdf` to compile and install.
 
 If you want to compile the latest version, make sure the Rust build environment is available (`cargo build`).
-Then run `git clone --recursive https://github.com/HollowMan6/mdbook-pdf.git`, in the cloned folder, run `cargo build --release` , get the executable in `target/release/`, and put it in PATH.
+Then run `git clone https://github.com/HollowMan6/mdbook-pdf.git`, in the cloned folder, run `cargo build --release` , get the executable in `target/release/`, and put it in PATH.
 
-For running, have Google Chrome / Chromium / Microsoft Edge available (installed at the default location, in PATH or binary location configured) as currently, automatically downloading Chromium binary [isn't available](https://github.com/atroche/rust-headless-chrome/issues/286).
+For running, have Google Chrome / Chromium / Microsoft Edge available (installed at the default location, in PATH or binary location configured) as currently, automatically downloading Chromium binary [isn't available](https://github.com/atroche/rust-headless-chrome/issues/286) (will update once upstream fixes such support).
 
-- On Windows 10 and above, the program can generate PDF normally without installing any additional software, because Microsoft Edge is the browser provided with Windows system. Of course, considering the support for the old versions of Windows without Edge, you can install Google Chrome on your computer.
+- On Windows 10 and above, the program can generate PDF normally without installing any additional software, because Microsoft Edge is the browser provided with Windows system. Of course, considering the support for the older versions of Windows without Edge, you can install Google Chrome on your computer.
 - In MacOS, you need to install [Google Chrome](https://www.google.com/chrome/) / [Microsoft Edge](https://www.microsoft.com/en-us/edge) or Chromium.
 - In Linux, you can choose to install any of the Google Chrome / Chromium / Microsoft Edge browsers. It is recommended to install Chromium. The name of this software package in your Linux distribution is commonly `chromium` or `chromium-browser` (Note: for Ubuntu later than 18.04, you have to install `chromium-browser` through `snap`).
 
@@ -60,8 +64,6 @@ title = "An Example"
 ```
 
 Finally you can build your book and get the PDF file with `mdbook build` command, your PDF file will be available at `book/pdf/output.pdf`.
-
-(Note: Because I found that special characters such as `:` are very likely to appear in the title of the book, which will cause the generation of the related PDF file to fail, so the file name does not use the form of `<book name>.pdf` but `output.pdf`)
 
 ## Configuration
 Support customize PDF paper orientation, scale of the webpage rendering, paper width and height, page margins, generated PDF page ranges, whether to display header and footer as well as customize their formats, and more.

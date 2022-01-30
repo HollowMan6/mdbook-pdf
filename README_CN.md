@@ -17,16 +17,18 @@
 
 [English](README.md)
 
-[v0.1.0 开发文档](https://openeuler.feishu.cn/docs/doccnQFaB5OLABMDjhWSE1siX5b#)
+[博客](https://blog.csdn.net/qq_18572023/article/details/122753374)
 
 用 Rust 编写的 [mdBook](https://github.com/rust-lang/mdBook) 后端，基于[headless chrome](https://github.com/atroche/rust-headless-chrome)和[Chrome开发工具协议](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)生成PDF。
 
-## 用法
-如果您的计算机的架构为`x86_64`，或者`Arm64`版本的Linux，请检查成功的[build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess)，单击最新的一次运行记录，然后您可以从 Artifacts中获取二进制文件（包括 `Windows`、`Linux`、`macOS`）。
+## 安装和使用
+由于它是 [mdBook](https://github.com/rust-lang/mdBook) 的插件（后端），首先您应该确保 `mdbook` 可用。
 
-否则，执行`cargo install mdbook-pdf`编译安装即可。
+如果您的计算机的架构为`x86_64`，或者`ARM64`版本的Linux，请检查成功的[build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess)，单击最新的一次运行记录，然后您可以从 Artifacts中获取二进制文件（包括 `Windows`、`Linux`、`macOS`）。
 
-如果需要最新版的编译二进制文件，请确保 Rust 编译环境可用（`cargo build`），然后执行`git clone --recursive https://github.com/HollowMan6/mdbook-pdf.git`，在然后在克隆下来的文件夹中运行`cargo build --release`，在`target/release/`中获取可执行文件，并将其放入PATH。
+否则，确保 [rust 编译环境](https://www.rust-lang.org/tools/install)可用，执行`cargo install mdbook-pdf`编译安装即可。
+
+如果需要最新版的编译二进制文件，请确保 Rust 编译环境可用（`cargo build`），然后执行`git clone https://github.com/HollowMan6/mdbook-pdf.git`，在然后在克隆下来的文件夹中运行`cargo build --release`，在`target/release/`中获取可执行文件，并将其放入PATH。
 
 为了使得程序能够正常运行，请确保计算机上安装了 Google Chrome / Chromium / Microsoft Edge，（安装在默认的位置，在当前的PATH中，或配置了二进制文件位置），因为现在自动下载 Chromium 功能还[不可用](https://github.com/atroche/rust-headless-chrome/issues/286).
 
@@ -61,8 +63,6 @@ title = "An Example"
 ```
 
 最后，您可以使用 `mdbook build` 命令生成书籍并获取PDF文件，您的PDF文件将被存放在`book/pdf/output.put`。
-
-(注：因为注意到书名中很容易出现特殊字符，比如说`:`，这样的话会导致生成相关PDF文件失败，所以文件名没有使用`<书名>.pdf`这种的形式，而是统一用`output.pdf`)
 
 ## 配置
 支持自定义PDF纸张方向、页面缩放比例、纸张宽度和高度、页面边距、生成的PDF页面范围、是否显示页眉和页脚以及自定义其格式等。
