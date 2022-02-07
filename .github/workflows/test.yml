@@ -143,21 +143,12 @@ jobs:
         if: matrix.backend-depends != ''
         run: |
           cargo install ${{ matrix.backend-depends }}
-      - name: Download mdbook executable
+      - name: Build and install mdbook executable
         run: |
-          if wget -O "/tmp/version" "https://api.github.com/repos/rust-lang/mdBook/releases/latest"; then
-            VERSION=`cat /tmp/version |  grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'`;
-          else
-            VERSION="v0.4.15";
-          fi;
-          if [ "`uname -s`" == "Darwin" ]; then
-            wget https://github.com/rust-lang/mdBook/releases/download/${VERSION}/mdbook-${VERSION}-x86_64-apple-darwin.tar.gz
-          else
-            wget https://github.com/rust-lang/mdBook/releases/download/${VERSION}/mdbook-${VERSION}-x86_64-unknown-linux-gnu.tar.gz
-          fi
-          tar -xf mdbook-*.tar.gz
-          chmod +x mdbook
-          mv mdbook /usr/local/bin/
+          git clone https://github.com/HollowMan6/mdbook mdbook_exec
+          cd mdbook_exec
+          cargo build --release
+          cp target/release/mdbook /usr/local/bin/
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
@@ -239,11 +230,12 @@ jobs:
         if: matrix.backend-depends != ''
         run: |
           cargo install ${{ matrix.backend-depends }}
-      - name: Download mdbook executable
+      - name: Build and install mdbook executable
         run: |
-          $env:VERSION='v0.4.15'
-          (new-object System.Net.WebClient).DownloadFile("https://github.com/rust-lang/mdBook/releases/download/$env:VERSION/mdbook-$env:VERSION-x86_64-pc-windows-msvc.zip", "$pwd\\mdbook_exec.zip")
-          Expand-Archive mdbook_exec.zip
+          git clone https://github.com/HollowMan6/mdbook mdbook_exec
+          cd mdbook_exec
+          cargo build --release
+          cp target/release/mdbook.exe .
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build

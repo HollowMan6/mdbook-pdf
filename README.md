@@ -70,5 +70,25 @@ Support customize PDF paper orientation, scale of the webpage rendering, paper w
 
 Check [book.toml](test_doc/book.toml#L10-L33) and comments for details for the available configurations of `[output.pdf]`.
 
+## Common Issues
+1. Support for Firefox in `mdbook-pdf`!
+
+Currently, according to [Puppeteer's documentation](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions), [Chrome DevTools Protocol Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) is only supported in Chrome headless. An issue has already been filed for this [here](https://github.com/puppeteer/puppeteer/issues/7628).
+
+2. Broken Table of Contents links!
+
+I've already submitted [a PR for mdBook](https://github.com/rust-lang/mdBook/pull/1738) to fix this by making print page (print.html) links link to anchors on the print page, but it's not merged yet. You can try [my PR fork](https://github.com/HollowMan6/mdBook) for this to work.
+
+3. Can you add the bookmark to the PDF reflecting the Table of Contents, just like what [wkhtmltopdf](https://wkhtmltopdf.org/) supported?
+
+This should be realized by Chromium, and an issue has already been filed for this [here](https://bugs.chromium.org/p/chromium/issues/detail?id=781797).
+
+4. Failed to render my book for PDF in `mdbook-pdf`!
+
+Will appreciate if you can report it to the [issue tracker](https://github.com/HollowMan6/mdbook-pdf/issues/new) providing all the traces for `mdbook-pdf` rendering.
+
+```bash
+RUST_BACKTRACE=full RUST_LOG=trace mdbook build
+```
 ## Credits
 This project relies on [headless_chrome](https://github.com/atroche/rust-headless-chrome). Because the new version has not been released, and the default timeout is not friendly to PDF generation, I use my [Fork version](https://github.com/HollowMan6/rust-headless-chrome) to published [mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome) for expanding the relevant timeout to 300 seconds as a submodule of this project, thus enabling the project to be published on [Crates.io](https://crates.io/) as well.

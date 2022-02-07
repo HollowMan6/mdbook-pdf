@@ -148,6 +148,27 @@ title = "An Example"
 
 接受输入一个布尔值，默认为`false`。其指定是否使用 CSS 定义的页面大小。`true`为使用，`false`时页面将通过缩放来适应纸张大小。
 
+## 常见问题
+1. 让`mdbook-pdf`支持火狐！
+
+目前，根据[Puppeteer的文档](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions)，[Chrome 开发工具协议 Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) 仅在 Chrome 无头模式中受支持。已经为此提交了一个[议题](https://github.com/puppeteer/puppeteer/issues/7628)。
+
+2. 目录链接损坏！
+
+我已经提交了[一个 mdBook 的拉取请求](https://github.com/rust-lang/mdBook/pull/1738)，该拉取请求通过将打印页面 (print.html) 上的链接指向打印页面上的锚点来解决此问题，但尚未合并。您可以尝试[我的拉取请求分支](https://github.com/HollowMan6/mdBook) 以使其正常工作。
+
+3. 可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？
+
+这应该由 Chromium 实现，并且已经为此提交了一个[议题](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)。
+
+4. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
+
+如果您能将它报告给[问题跟踪器](https://github.com/HollowMan6/mdbook-pdf/issues/new)，并提供`mdbook-pdf`渲染时产生的所有跟踪，将不胜感激。
+
+```bash
+RUST_BACKTRACE=full RUST_LOG=trace mdbook build
+```
+
 ## 致谢
 
 本项目依赖于 [headless_chrome](https://github.com/atroche/rust-headless-chrome)。因其一直未发布新版，且默认超时时间对PDF生成不友好，所以使用了我的[Fork 版本](https://github.com/HollowMan6/rust-headless-chrome)发布了[mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome)，将相关超时时间扩大为300秒，作为本项目的子模块，从而使得项目能够发布在[Crates.io](https://crates.io/)

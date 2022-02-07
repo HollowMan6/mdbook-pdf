@@ -1,13 +1,15 @@
 [package]
 name = "mdbook-pdf"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Hollow Man <hollowman@opensuse.org>"]
 edition = "2021"
 description = "A backend for mdBook written in Rust for generating PDF based on headless chrome and Chrome DevTools Protocol"
-license = "GPL-3.0-or-later"
+license = "GPL-3.0"
+homepage = "https://hollowmansblog.wordpress.com/2022/01/30/mdbook-pdf-a-mdbook-backend-for-generating-pdf-files/"
 repository = "https://github.com/HollowMan6/mdbook-pdf"
 keywords = ["book", "mdbook", "rustbook", "pdf"]
 readme = "README.md"
+categories = ["text-processing", "command-line-interface"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,3 +22,4 @@ mdbook-pdf-headless_chrome = "0.1.0"
 mdbook = "0.4.15"
 serde = "1.0.136"
 serde_derive = "1.0.136"
+env_logger = "0.9.0"

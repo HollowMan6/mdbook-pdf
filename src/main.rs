@@ -1,26 +1,27 @@
 /**
  * mdbook-pdf
  * Copyright (C) 2022 Hollow Man
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 use headless_chrome::{types::PrintToPdfOptions, Browser, LaunchOptionsBuilder};
 use mdbook::renderer::RenderContext;
-use std::{ffi::OsStr, fs, io, path::PathBuf, thread, time::Duration};
+use std::{ffi::OsStr, fs, io, io::Write, path::PathBuf, thread, time::Duration};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    env_logger::init();
+
     // Receives the data passed to the program via mdbook
     let mut stdin = io::stdin();
 
@@ -32,6 +33,55 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap()
         .unwrap();
 
+    let print_html_path = ctx
+        .destination
+        .parent()
+        .unwrap()
+        .join("html")
+        .join("print.html")
+        .to_owned()
+        .to_str()
+        .unwrap()
+        .to_owned();
+
+    // Modify the print.html for custom JS scripts
+    // (It's OK to append the script outside the html tag)
+    let mut file = fs::OpenOptions::new()
+        .append(true)
+        .open(print_html_path.clone())
+        .unwrap();
+    if let Err(e) = writeln!(
+        file,
+        "
+<!-- Custom JS scripts for mdbook-pdf PDF generation -->
+<script type='text/javascript'>
+    let markAllContentHasLoadedForPrinting = () =>
+        window.setTimeout(
+            () => {{
+                let p = document.createElement('div');
+                p.setAttribute('id', 'content-has-all-loaded-for-mdbook-pdf-generation');
+                document.body.appendChild(p);
+            }}, 100
+        );
+
+    window.addEventListener('load', () => {{
+        // Expand all the <details> elements for printing.
+        r = document.getElementsByTagName('details');
+        for (let i of r)
+            i.open = true;
+
+        try {{
+            MathJax.Hub.Register.StartupHook('End', markAllContentHasLoadedForPrinting);
+        }} catch (e) {{
+            markAllContentHasLoadedForPrinting();
+        }}
+    }});
+</script>
+"
+    ) {
+        eprintln!("Couldn't write to file: {}", e);
+    }
+
     // Used to relieve errors related to timeouts, but now for
     // the patches in my fork, it's not likely to be needed
     let trying_times = cfg.trying_times + 1;
@@ -39,16 +89,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Generating PDF, please be patient...");
 
     for time in 1..trying_times {
-        let url = format!(
-            "file://{}",
-            ctx.destination
-                .parent()
-                .unwrap()
-                .join("html")
-                .join("print.html")
-                .to_str()
-                .unwrap()
-        );
+        let url = format!("file://{}", print_html_path);
 
         let cloned_cfg = cfg.clone();
         let browser_binary = if cloned_cfg.browser_binary_path.is_empty() {
@@ -92,7 +133,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Create a new browser window.
         let browser = Browser::new(launch_opts)?;
         let tab = browser.wait_for_initial_tab()?;
+        tab.set_default_timeout(std::time::Duration::from_secs(300));
         let page = tab.navigate_to(&url)?.wait_until_navigated()?;
+        page.wait_for_element("#content-has-all-loaded-for-mdbook-pdf-generation")?;
 
         // Generate the PDF.
         let generated_pdf = match page.print_to_pdf(Some(pdf_opts)) {
@@ -108,14 +151,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
 
         // Write the PDF to the destination.
-        fs::write(
-            ctx.destination.join("output.pdf").to_str().unwrap(),
-            &generated_pdf,
-        )?;
-        println!(
-            "PDF successfully generated at: {}",
-            ctx.destination.join("output.pdf").to_str().unwrap()
-        );
+        let generated_pdf_path = ctx
+            .destination
+            .join("output.pdf")
+            .to_str()
+            .unwrap()
+            .to_owned();
+        fs::write(generated_pdf_path.clone(), &generated_pdf)?;
+        println!("PDF successfully generated at: {}", generated_pdf_path);
         break;
     }
 
