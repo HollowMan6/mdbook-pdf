@@ -67,7 +67,7 @@ title = "An Example"
 ## 配置
 支持自定义PDF纸张方向、页面缩放比例、纸张宽度和高度、页面边距、生成的PDF页面范围、是否显示页眉和页脚以及自定义其格式等。
 
-查看 [book.toml](test_doc/book.toml#L10-L33) 以了解 `[output.pdf]` 可用配置的详细信息。
+查看 [book.toml](test_doc/book.toml#L10-L35) 以了解 `[output.pdf]` 可用配置的详细信息。
 
 ### 具体参数详解
 - trying-times
@@ -79,6 +79,10 @@ title = "An Example"
 接受输入一个字符串，默认为空`''`，程序自动判断路径。其指定浏览器可执行文件路径。
 
 本程序支持最新的基于Chromium的浏览器，不支持Safari和Firefox。如果你需要指定，请指定完整的路径，比如说`/usr/bin/foo`。如果指定了错误的可执行文件，则很可能会出现超时错误或者直接报错。
+
+- static_site_url
+
+接受输入一个字符串，默认为空`''`。其指定书的静态网站托管URL，从而修复书之外的相对链接，将其转换为绝对路径。
 
 - landscape
 
@@ -151,15 +155,17 @@ title = "An Example"
 ## 常见问题
 1. 让`mdbook-pdf`支持火狐！
 
-目前，根据[Puppeteer的文档](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions)，[Chrome 开发工具协议 Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) 仅在 Chrome 无头模式中受支持。已经为此提交了一个[议题](https://github.com/puppeteer/puppeteer/issues/7628)。
+目前，根据[Puppeteer的文档](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions)，[Chrome 开发工具协议 Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) 仅在 Chrome 无头模式中受支持。目前已经有人为此提交了一个[议题](https://github.com/puppeteer/puppeteer/issues/7628)。
 
-2. 目录链接损坏！
+2. 链接损坏！
 
 我已经提交了[一个 mdBook 的拉取请求](https://github.com/rust-lang/mdBook/pull/1738)，该拉取请求通过将打印页面 (print.html) 上的链接指向打印页面上的锚点来解决此问题，但尚未合并。您可以尝试[我的拉取请求分支](https://github.com/HollowMan6/mdBook) 以使其正常工作。
 
+如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](test_doc/book.toml#L17-L18)以便修复。
+
 3. 可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？
 
-这应该由 Chromium 实现，并且已经为此提交了一个[议题](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)。
+这应该由 Chromium 实现，并且目前已经有人为此提交了一个[议题](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)。
 
 4. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
 

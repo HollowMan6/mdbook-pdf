@@ -68,16 +68,18 @@ Finally you can build your book and get the PDF file with `mdbook build` command
 ## Configuration
 Support customize PDF paper orientation, scale of the webpage rendering, paper width and height, page margins, generated PDF page ranges, whether to display header and footer as well as customize their formats, and more.
 
-Check [book.toml](test_doc/book.toml#L10-L33) and comments for details for the available configurations of `[output.pdf]`.
+Check [book.toml](test_doc/book.toml#L10-L35) and comments for details for the available configurations of `[output.pdf]`.
 
 ## Common Issues
 1. Support for Firefox in `mdbook-pdf`!
 
 Currently, according to [Puppeteer's documentation](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions), [Chrome DevTools Protocol Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) is only supported in Chrome headless. An issue has already been filed for this [here](https://github.com/puppeteer/puppeteer/issues/7628).
 
-2. Broken Table of Contents links!
+2. Broken links!
 
 I've already submitted [a PR for mdBook](https://github.com/rust-lang/mdBook/pull/1738) to fix this by making print page (print.html) links link to anchors on the print page, but it's not merged yet. You can try [my PR fork](https://github.com/HollowMan6/mdBook) for this to work.
+
+If you have relative links that link outside the book, please provide the [static hosting site URL](test_doc/book.toml#L17-L18) for it to get fixed.
 
 3. Can you add the bookmark to the PDF reflecting the Table of Contents, just like what [wkhtmltopdf](https://wkhtmltopdf.org/) supported?
 

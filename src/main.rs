@@ -16,11 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 use headless_chrome::{types::PrintToPdfOptions, Browser, LaunchOptionsBuilder};
+use lazy_static::lazy_static;
 use mdbook::renderer::RenderContext;
-use std::{ffi::OsStr, fs, io, io::Write, path::PathBuf, thread, time::Duration};
+use regex::Regex;
+use std::io::{BufReader, BufWriter, Read, Write};
+use std::{ffi::OsStr, fs, io, path::PathBuf, thread, time::Duration};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
+    lazy_static! {
+        static ref SCHEME_LINK: Regex = Regex::new(r"^[a-z][a-z0-9+.-]*:").unwrap();
+        static ref A_LINK: Regex = Regex::new(r#"(<a [^>]*?href=")([^"]+?)""#).unwrap();
+    }
 
     // Receives the data passed to the program via mdbook
     let mut stdin = io::stdin();
@@ -44,43 +51,76 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap()
         .to_owned();
 
-    // Modify the print.html for custom JS scripts
-    // (It's OK to append the script outside the html tag)
-    let mut file = fs::OpenOptions::new()
-        .append(true)
+    // Modify the print.html for custom JS scripts as well as links outside the book.
+    let file = fs::OpenOptions::new()
+        .read(true)
         .open(print_html_path.clone())
         .unwrap();
-    if let Err(e) = writeln!(
-        file,
-        "
-<!-- Custom JS scripts for mdbook-pdf PDF generation -->
-<script type='text/javascript'>
-    let markAllContentHasLoadedForPrinting = () =>
-        window.setTimeout(
-            () => {{
-                let p = document.createElement('div');
-                p.setAttribute('id', 'content-has-all-loaded-for-mdbook-pdf-generation');
-                document.body.appendChild(p);
-            }}, 100
-        );
+    let mut buf_reader = BufReader::new(file);
+    let mut contents = String::new();
+    buf_reader.read_to_string(&mut contents)?;
+    contents = contents.replacen(
+        "</script>",
+        "</script>
 
-    window.addEventListener('load', () => {{
-        // Expand all the <details> elements for printing.
-        r = document.getElementsByTagName('details');
-        for (let i of r)
-            i.open = true;
+        <!-- Custom JS scripts for mdbook-pdf PDF generation -->
+        <script type='text/javascript'>
+            let markAllContentHasLoadedForPrinting = () =>
+                window.setTimeout(
+                    () => {{
+                        let p = document.createElement('div');
+                        p.setAttribute('id', 'content-has-all-loaded-for-mdbook-pdf-generation');
+                        document.body.appendChild(p);
+                    }}, 100
+                );
 
-        try {{
-            MathJax.Hub.Register.StartupHook('End', markAllContentHasLoadedForPrinting);
-        }} catch (e) {{
-            markAllContentHasLoadedForPrinting();
-        }}
-    }});
-</script>
-"
-    ) {
-        eprintln!("Couldn't write to file: {}", e);
+            window.addEventListener('load', () => {{
+                // Expand all the <details> elements for printing.
+                r = document.getElementsByTagName('details');
+                for (let i of r)
+                    i.open = true;
+
+                try {{
+                    MathJax.Hub.Register.StartupHook('End', markAllContentHasLoadedForPrinting);
+                }} catch (e) {{
+                    markAllContentHasLoadedForPrinting();
+                }}
+            }});
+        </script>",
+        1,
+    );
+    if !cfg.static_site_url.is_empty() {
+        contents = A_LINK
+            .replace_all(&contents, |caps: &regex::Captures<'_>| {
+                // Ensure that there is no '\' in the link to ensure the following judgement work
+                let link = caps[2].replace("\\", "/");
+                // Don't modify links with schemes like `https`, and no need to modify pages inside the book.
+                if !link.starts_with("#")
+                    && !SCHEME_LINK.is_match(&link)
+                    && (link.starts_with("../") || link.contains("/../"))
+                {
+                    let mut fixed_link = String::new();
+
+                    fixed_link.push_str(&cfg.static_site_url);
+                    if !fixed_link.ends_with("/") {
+                        fixed_link.push('/');
+                    }
+                    fixed_link.push_str(&link);
+
+                    return format!("{}{}\"", &caps[1], &fixed_link);
+                }
+                // Otherwise, leave it as-is.
+                format!("{}{}\"", &caps[1], &caps[2])
+            })
+            .into_owned();
     }
+
+    let file = fs::OpenOptions::new()
+        .write(true)
+        .open(print_html_path.clone())
+        .unwrap();
+    let mut buf_writer = BufWriter::new(file);
+    buf_writer.write_all(contents.as_bytes())?;
 
     // Used to relieve errors related to timeouts, but now for
     // the patches in my fork, it's not likely to be needed
@@ -178,6 +218,7 @@ extern crate serde_derive;
 pub struct PrintOptions {
     pub trying_times: u64,
     pub browser_binary_path: String,
+    pub static_site_url: String,
     pub landscape: bool,
     pub display_header_footer: bool,
     pub print_background: bool,
@@ -205,6 +246,7 @@ impl Default for PrintOptions {
         PrintOptions {
             trying_times: 1u64,
             browser_binary_path: "".to_string(),
+            static_site_url: "".to_string(),
             landscape: false,
             display_header_footer: false,
             print_background: false,

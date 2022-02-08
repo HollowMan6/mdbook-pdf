@@ -14,6 +14,8 @@ title = "An Example"
 ## If needed, please specify the full path.
 ## If you specify the wrong binary, chances are that there will be a timeout error.
 # browser-binary-path = ""
+## Assign the static hosting site url so that relative links outside the book can be fixed.
+# static_site_url = "https://rust-lang.github.io/mdBook"
 ## Check Chrome Devtools Protocol Docs for the explanation of the following params:
 ## https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
 landscape = false
