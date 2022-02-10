@@ -67,25 +67,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         <script type='text/javascript'>
             let markAllContentHasLoadedForPrinting = () =>
                 window.setTimeout(
-                    () => {{
+                    () => {
                         let p = document.createElement('div');
                         p.setAttribute('id', 'content-has-all-loaded-for-mdbook-pdf-generation');
                         document.body.appendChild(p);
-                    }}, 100
+                    }, 100
                 );
 
-            window.addEventListener('load', () => {{
+            window.addEventListener('load', () => {
                 // Expand all the <details> elements for printing.
                 r = document.getElementsByTagName('details');
                 for (let i of r)
                     i.open = true;
 
-                try {{
+                try {
                     MathJax.Hub.Register.StartupHook('End', markAllContentHasLoadedForPrinting);
-                }} catch (e) {{
+                } catch (e) {
                     markAllContentHasLoadedForPrinting();
-                }}
-            }});
+                }
+            });
         </script>",
         1,
     );
