@@ -12,7 +12,7 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-          version: ["0.1.2"]
+          version: ["0.1.3"]
           os: ["macos-latest", "ubuntu-latest", "windows-latest"]
     runs-on: ${{ matrix.os }}
     steps:
@@ -61,5 +61,5 @@ jobs:
       - name: Upload Binary File to Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: mdbook-pdf-v0.1.2-aarch64-unknown-linux-gnu
+          name: mdbook-pdf-v0.1.3-aarch64-unknown-linux-gnu
           path: target/release/mdbook-pdf
