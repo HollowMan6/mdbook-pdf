@@ -24,7 +24,7 @@ A backend for [mdBook](https://github.com/rust-lang/mdBook) written in Rust for 
 ## Installation & Usage
 Since it's a plugin (backend) for [mdBook](https://github.com/rust-lang/mdBook), first of all you should ensure that `mdbook` is available.
 
-If your machine's architecture is `x86_64`, or you are using Linux for `ARM64`, check the successful [build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess), click into the latest one, and then you can get a binary from the Artifacts (including `Windows`, `Linux`, `macOS`).
+If your machine's architecture is `x86_64`, or you are using Linux for `ARM64`, check the successful [build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess)/[release](https://github.com/HollowMan6/mdbook-pdf/releases), click into the latest one, and then you can get a binary from the Artifacts (including `Windows`, `Linux`, `macOS`).
 
 Otherwise, make sure the [rust compiling environment](https://www.rust-lang.org/tools/install) is available, execute `cargo install mdbook-pdf` to compile and install.
 
@@ -93,4 +93,4 @@ Will appreciate if you can report it to the [issue tracker](https://github.com/H
 RUST_BACKTRACE=full RUST_LOG=trace mdbook build
 ```
 ## Credits
-This project relies on [headless_chrome](https://github.com/atroche/rust-headless-chrome). Because the new version has not been released, and the default timeout is not friendly to PDF generation, I use my [Fork version](https://github.com/HollowMan6/rust-headless-chrome) to published [mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome) for expanding the relevant timeout to 300 seconds as a submodule of this project, thus enabling the project to be published on [Crates.io](https://crates.io/) as well.
+This project relies on [headless_chrome](https://github.com/atroche/rust-headless-chrome). Because the new version has not been released, and the default timeout is not friendly to PDF generation, I use my [Fork version](https://github.com/HollowMan6/rust-headless-chrome) to published [mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome) for expanding the relevant timeout to 600 seconds as a submodule of this project, thus enabling the project to be published on [Crates.io](https://crates.io/) as well.

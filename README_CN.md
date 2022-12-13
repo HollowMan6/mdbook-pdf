@@ -24,7 +24,7 @@
 ## 安装和使用
 由于它是 [mdBook](https://github.com/rust-lang/mdBook) 的插件（后端），首先您应该确保 `mdbook` 可用。
 
-如果您的计算机的架构为`x86_64`，或者`ARM64`版本的Linux，请检查成功的[build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess)，单击最新的一次运行记录，然后您可以从 Artifacts中获取二进制文件（包括 `Windows`、`Linux`、`macOS`）。
+如果您的计算机的架构为`x86_64`，或者`ARM64`版本的Linux，请检查成功的[build GitHub Actions workflows](https://github.com/HollowMan6/mdbook-pdf/actions/workflows/build.yml?query=is%3Asuccess)/[release](https://github.com/HollowMan6/mdbook-pdf/releases)，单击最新的一次运行记录，然后您可以从 Artifacts中获取二进制文件（包括 `Windows`、`Linux`、`macOS`）。
 
 否则，确保 [rust 编译环境](https://www.rust-lang.org/tools/install)可用，执行`cargo install mdbook-pdf`编译安装即可。
 
@@ -177,4 +177,4 @@ RUST_BACKTRACE=full RUST_LOG=trace mdbook build
 
 ## 致谢
 
-本项目依赖于 [headless_chrome](https://github.com/atroche/rust-headless-chrome)。因其一直未发布新版，且默认超时时间对PDF生成不友好，所以使用了我的[Fork 版本](https://github.com/HollowMan6/rust-headless-chrome)发布了[mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome)，将相关超时时间扩大为300秒，作为本项目的子模块，从而使得项目能够发布在[Crates.io](https://crates.io/)
+本项目依赖于 [headless_chrome](https://github.com/atroche/rust-headless-chrome)。因其一直未发布新版，且默认超时时间对PDF生成不友好，所以使用了我的[Fork 版本](https://github.com/HollowMan6/rust-headless-chrome)发布了[mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome)，将相关超时时间扩大为600秒，作为本项目的子模块，从而使得项目能够发布在[Crates.io](https://crates.io/)

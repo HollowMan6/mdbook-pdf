@@ -159,10 +159,10 @@ jobs:
               static-url: "https://doc.rust-lang.org/nomicon/"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'recursive'
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
         run: |
@@ -195,12 +195,12 @@ jobs:
           fi
           mdbook build
       - name: Upload PDF File to Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
           path: ${{ matrix.dir }}/book/pdf/*.pdf
       - name: Upload Build HTML to Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_HTML
           path: ${{ matrix.dir }}/book/html/*
@@ -262,10 +262,10 @@ jobs:
               static-url: "https://doc.rust-lang.org/nomicon/"
     runs-on: "windows-latest"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'recursive'
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
         run: |
@@ -297,12 +297,12 @@ jobs:
           echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
           mdbook build
       - name: Upload PDF File to Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
           path: ${{ matrix.dir }}/book/pdf/*.pdf
       - name: Upload Build HTML to Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_HTML
           path: ${{ matrix.dir }}/book/html/*
