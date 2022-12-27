@@ -35,3 +35,4 @@ footer-template = "<p style='font-size:10px; margin-left: 48%'><span class='page
 prefer-css-page-size = true
 
 [output.pdf-outline]
+like-wkhtmltopdf = false

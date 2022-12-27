@@ -170,7 +170,7 @@ title = "An Example"
 
 这应该由 Chromium 实现，并且目前已经有人为此提交了一个[议题](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)。
 
-已经初步实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). 它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`一起使用。
+已经初步实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). 它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`和常见问题2中提到的修复了`print.html`中损坏链接的[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738)一起使用。
 
 您可以通过`pip install mdbook-pdf-outline`安装此后端。
 
@@ -180,7 +180,16 @@ title = "An Example"
 [output.pdf-outline]
 ```
 
-您可以在`book/pdfoutline/output.pdf`中找到带有大纲的版本。现在您拥有了与`wkhtmltopdf`生成的大纲/书签相同的PDF文件。
+如果您想使PDF目录与`print.html`页面中显示的目录相同，则无需进一步修改`book.toml`。
+
+如果您希望使使PDF目录与`wkhtmltopdf`生成的目录相同（根据标题生成条目），则可以通过在`book.toml`中使用以下配置来启用`like-wkhtmltopdf`选项：
+
+```toml
+[output.pdf-outline]
+like-wkhtmltopdf = true
+```
+
+最后，您可以在`book/pdfoutline/output.pdf`中找到带有大纲/目录的版本。
 
 4. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
 

@@ -23,3 +23,6 @@ mdbook-pdf-headless_chrome = "0"
 regex = "1"
 serde = "1"
 serde_derive = "1"
+
+[output.pdf-outline]
+like-wkhtmltopdf = false

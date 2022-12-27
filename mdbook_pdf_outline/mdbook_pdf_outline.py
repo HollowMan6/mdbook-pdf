@@ -13,10 +13,12 @@
 '''
 
 
-from pypdf import PdfReader, PdfMerger
+from pypdf import PdfReader, PdfWriter
 from pypdf.generic import Fit
 import lxml.html
 import re
+import json
+
 
 def update_parent_dict(parent_dict, level, node):
     temp = parent_dict
@@ -28,7 +30,7 @@ def update_parent_dict(parent_dict, level, node):
     temp["child"] = {}
 
 
-def add_outline(html_page, reader, merger):
+def add_wkhtmltopdf_like_outline(html_page, reader, writer):
     parent_dict = {"node": None, "child": {}}
     with open(html_page, "r", encoding="utf8") as f:
         data = f.read()
@@ -47,33 +49,92 @@ def add_outline(html_page, reader, merger):
             parent = None
             if level > 1:
                 temp = parent_dict
-                for i in range(1, level - 1):
+                for _ in range(1, level - 1):
                     if temp["child"] and temp["child"]["node"]:
                         temp = temp["child"]
                 parent = temp["node"]
 
             if dest.get('/Type') == '/Fit':
-                update_parent_dict(parent_dict, level, merger.add_outline_item(
+                update_parent_dict(parent_dict, level, writer.add_outline_item(
                     results.text_content(), 0, parent))
                 continue
-            update_parent_dict(parent_dict, level, merger.add_outline_item(
+            update_parent_dict(parent_dict, level, writer.add_outline_item(
                 results.text_content(), reader.get_destination_page_number(
                     dest), parent, fit=Fit(
                         dest.get('/Type'), (dest.get('/Left'), dest.get('/Top'), dest.get('/Zoom')))))
 
 
+def parse_toc(toc, reader, writer, parent_dict, level=1):
+    for head in toc:
+        section = head.find_class("section")
+        if len(section) > 0:
+            parse_toc(section[0], reader, writer, parent_dict, level + 1)
+        else:
+            dest_name = "/"
+            a_element = None
+            for element in head.iter():
+                if element.tag == "a":
+                    a_element = element
+                    break
+            if a_element is None:
+                continue
+            for content in a_element.attrib["href"].split("#"):
+                dest_name += content.rstrip(".html").replace("/", "-") + "-"
+            dest_name = dest_name.rstrip("-")
+            dest = None
+            if dest_name in reader.named_destinations:
+                dest = reader.named_destinations[dest_name]
+            else:
+                for d in reader.named_destinations.items():
+                    if d[0].startswith(dest_name):
+                        dest = d[1]
+                        break
+            if not dest:
+                continue
+            parent = None
+            if level > 1:
+                temp = parent_dict
+                for _ in range(1, level - 1):
+                    if temp["child"] and temp["child"]["node"]:
+                        temp = temp["child"]
+                parent = temp["node"]
+
+            if dest.get('/Type') == '/Fit':
+                update_parent_dict(parent_dict, level, writer.add_outline_item(
+                    head.text_content(), 0, parent))
+                continue
+            update_parent_dict(parent_dict, level, writer.add_outline_item(
+                head.text_content(), reader.get_destination_page_number(
+                    dest), parent))
+
+
+def add_toc_outline(html_page, reader, writer):
+    parent_dict = {"node": None, "child": {}}
+    with open(html_page, "r", encoding="utf8") as f:
+        data = f.read()
+        root = lxml.html.fromstring(data)
+        results = root.find_class("chapter")
+        # Table of contents
+        for result in results:
+            parse_toc(result, reader, writer, parent_dict)
+            break
+
+
 def main():
-    input()
+    conf = json.loads(input())["config"]["output"]["pdf-outline"]
 
     reader = PdfReader("../pdf/output.pdf")
 
-    merger = PdfMerger()
-    merger.append(reader)
+    writer = PdfWriter()
+    writer.append(reader)
 
-    add_outline("../html/print.html", reader, merger)
+    if "like-wkhtmltopdf" in conf and conf["like-wkhtmltopdf"]:
+        add_wkhtmltopdf_like_outline("../html/print.html", reader, writer)
+    else:
+        add_toc_outline("../html/print.html", reader, writer)
 
     with open("output.pdf", "wb") as f:
-        merger.write(f)
+        writer.write(f)
 
 
 if __name__ == "__main__":
