@@ -73,9 +73,12 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
             dest_name = "/"
             a_element = None
             for element in head.iter():
-                if element.tag == "a":
+                if element.tag == "a" and "href" in element.attrib:
                     a_element = element
                     break
+            to_remove = head.find_class("toggle")
+            for element in to_remove:
+                element.getparent().remove(element)
             if a_element is None:
                 continue
             for content in a_element.attrib["href"].split("#"):
