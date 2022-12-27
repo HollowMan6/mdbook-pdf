@@ -1,0 +1,88 @@
+name: Upload to Pypi
+
+on:
+  workflow_dispatch:  # Allow manual triggers
+    inputs:
+      tags:
+        description: 'Tags'
+        required: false
+  push:
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+env:
+  # Change variable to your package name.
+  NAME: mdbook_pdf_outline
+
+jobs:
+  # Pack Extension and Upload
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Set up Python 3
+        uses: actions/setup-python@main
+        with:
+          python-version: '3.x'
+
+      - name: Setup Version
+        run: |
+         if [ ! -z "${{ github.event.inputs.tags }}" ]
+          then
+            version=${{ github.event.inputs.tags }}
+            echo "VERSION=${{ github.event.inputs.tags }}" >> $GITHUB_ENV
+          else
+            version=$(echo '${{ github.ref }}' | sed -e 's,.*/\(.*\),\1,')
+            echo "VERSION=$version" >> $GITHUB_ENV
+         fi
+         num=$(echo $version | sed -e 's/^v//')
+         echo "VERSION_NUM=$num" >> $GITHUB_ENV
+
+      - name: Install pypa/build
+        run: >-
+          python -m
+          pip install
+          build twine
+          --user
+
+      - name: Build a binary wheel and a source tarball
+        run: >-
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+          .
+
+      - name: Check Build
+        run: >-
+          python -m
+          twine
+          check
+          dist/*
+
+      - name: Prepare for upload
+        run: |
+         cp dist/${{ env.NAME }}-${{ env.VERSION_NUM }}-*.whl ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
+
+      - name: Upload Zipped Files to release
+        uses: svenstaro/upload-release-action@master
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
+          tag: ${{ env.VERSION }}
+          overwrite: true
+
+      - name: Upload Zipped Files to Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
+          path: ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
+
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

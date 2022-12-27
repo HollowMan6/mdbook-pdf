@@ -176,6 +176,7 @@ jobs:
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
+          sudo pip3 install .
           mv target/debug/mdbook-pdf /usr/local/bin/
       - name: Build Test Docs for PDF
         run: |
@@ -192,13 +193,14 @@ jobs:
             echo "margin-left = 0.5" >> book.toml
             echo "margin-right = 0.5" >> book.toml
             echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
+            echo "[output.pdf-outline]" >> book.toml
           fi
           mdbook build
       - name: Upload PDF File to Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
-          path: ${{ matrix.dir }}/book/pdf/*.pdf
+          path: ${{ matrix.dir }}/book/pdf-outline/*.pdf
       - name: Upload Build HTML to Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -279,6 +281,7 @@ jobs:
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
+          pip3 install .
           cp target/debug/mdbook-pdf.exe mdbook_exec
       - name: Build Test Docs for PDF
         run: |
@@ -295,12 +298,13 @@ jobs:
           echo "margin-left = 0.5" >> book.toml
           echo "margin-right = 0.5" >> book.toml
           echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
+          echo "[output.pdf-outline]" >> book.toml
           mdbook build
       - name: Upload PDF File to Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
-          path: ${{ matrix.dir }}/book/pdf/*.pdf
+          path: ${{ matrix.dir }}/book/pdf-outline/*.pdf
       - name: Upload Build HTML to Artifact
         uses: actions/upload-artifact@v3
         with:

@@ -15,6 +15,9 @@
 [![GPL Licence](https://img.shields.io/badge/license-GPL-blue)](https://opensource.org/licenses/GPL-3.0/)
 [![Repo-Size](https://img.shields.io/github/repo-size/HollowMan6/mdbook-pdf.svg)](https://github.com/HollowMan6/mdbook-pdf/archive/master.zip)
 
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/context:python)
+
 [English](README.md)
 
 [博客](https://blog.csdn.net/qq_18572023/article/details/122753374)
@@ -166,6 +169,18 @@ title = "An Example"
 3. 可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？
 
 这应该由 Chromium 实现，并且目前已经有人为此提交了一个[议题](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)。
+
+已经初步实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). 它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`一起使用。
+
+您可以通过`pip install mdbook-pdf-outline`安装此后端。
+
+记住将以下内容放在`book.toml`的 ***末尾，[output.pdf]之后***：
+
+```toml
+[output.pdf-outline]
+```
+
+您可以在`book/pdfoutline/output.pdf`中找到带有大纲的版本。现在您拥有了与`wkhtmltopdf`生成的大纲/书签相同的PDF文件。
 
 4. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
 
