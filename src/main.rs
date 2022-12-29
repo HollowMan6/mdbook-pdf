@@ -145,6 +145,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .idle_browser_timeout(Duration::from_secs(600))
             .path(browser_binary)
             .args(vec![
+                OsStr::new("--disable-pdf-tagging"),
                 OsStr::new("--unlimited-storage"),
                 OsStr::new("--disable-web-security"),
                 OsStr::new("--webkit-print-color-adjust"),
@@ -176,6 +177,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         tab.set_default_timeout(std::time::Duration::from_secs(300));
         let page = tab.navigate_to(&url)?.wait_until_navigated()?;
         page.wait_for_element("#content-has-all-loaded-for-mdbook-pdf-generation")?;
+
+        // Find the theme and click it to change the theme.
+        if !cloned_cfg.theme.is_empty() {
+            match tab.find_element(&format!("button.theme#{}", cloned_cfg.theme.to_lowercase())) {
+                Ok(_) => {
+                    tab.evaluate(
+                        &format!(
+                            "document.querySelector('button.theme#{}').click()",
+                            cloned_cfg.theme.to_lowercase()
+                        ),
+                        false,
+                    )?;
+                }
+                Err(_) => println!(
+                    "Unable to find theme {}, return to default one.",
+                    cloned_cfg.theme.to_lowercase()
+                ),
+            };
+        }
 
         // Generate the PDF.
         let generated_pdf = match page.print_to_pdf(Some(pdf_opts)) {
@@ -222,6 +242,7 @@ pub struct PrintOptions {
     pub landscape: bool,
     pub display_header_footer: bool,
     pub print_background: bool,
+    pub theme: String,
     pub scale: f64,
     pub paper_width: f64,
     pub paper_height: f64,
@@ -250,6 +271,7 @@ impl Default for PrintOptions {
             landscape: false,
             display_header_footer: false,
             print_background: false,
+            theme: "".to_string(),
             scale: 1_f64,
             paper_width: 8.5_f64,
             paper_height: 11_f64,
