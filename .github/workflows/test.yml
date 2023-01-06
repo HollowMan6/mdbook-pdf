@@ -163,6 +163,10 @@ jobs:
         with:
           submodules: 'recursive'
       - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
         run: |
@@ -176,7 +180,8 @@ jobs:
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
-          sudo pip3 install .
+          mkdir -p ~/.cache/pip
+          sudo pip install .
           mv target/debug/mdbook-pdf /usr/local/bin/
       - name: Build Test Docs for PDF
         run: |
@@ -193,6 +198,8 @@ jobs:
             echo "margin-left = 0.5" >> book.toml
             echo "margin-right = 0.5" >> book.toml
             echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
+            echo "header-template = \"<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>\"" >> book.toml
+            echo "footer-template = \"<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>\"" >> book.toml
             echo "[output.pdf-outline]" >> book.toml
           fi
           mdbook build
@@ -268,6 +275,10 @@ jobs:
         with:
           submodules: 'recursive'
       - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
         run: |
@@ -281,7 +292,7 @@ jobs:
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
-          pip3 install .
+          pip install .
           cp target/debug/mdbook-pdf.exe mdbook_exec
       - name: Build Test Docs for PDF
         run: |
@@ -298,6 +309,8 @@ jobs:
           echo "margin-left = 0.5" >> book.toml
           echo "margin-right = 0.5" >> book.toml
           echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
+          echo "header-template = `"<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>`"" >> book.toml
+          echo "footer-template = `"<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>`"" >> book.toml
           echo "[output.pdf-outline]" >> book.toml
           mdbook build
       - name: Upload PDF File to Artifact
