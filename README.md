@@ -68,7 +68,7 @@ Finally you can build your book and get the PDF file with `mdbook build` command
 ## Configuration
 Support customize PDF paper orientation, scale of the webpage rendering, paper width and height, page margins, generated PDF page ranges, whether to display header and footer as well as customize their formats, and more.
 
-Check [book.toml](test_doc/book.toml#L10-L35) and comments for details for the available configurations of `[output.pdf]`.
+Check [book.toml](test_doc/book.toml#L10-L36) and comments for details for the available configurations of `[output.pdf]`.
 
 ## Common Issues
 1. Support for Firefox in `mdbook-pdf`!
@@ -85,7 +85,7 @@ If you have relative links that link outside the book, please provide the [stati
 
 This should be realized by Chromium, and an issue has already been filed for this [here](https://bugs.chromium.org/p/chromium/issues/detail?id=781797).
 
-Initial support for the bookmark/outline of the PDF file has already been available ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and the [mdbook version](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 for fixing the broken links in `print.html`.
+Initial support for the bookmark/outline of the PDF file has already been available ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and ***the [mdbook version](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 for fixing the broken links in `print.html`***.
 
 You can install this backend by `pip install mdbook-pdf-outline`.
 
@@ -108,7 +108,7 @@ Finally, you can find the outlined version at `book/pdf-outline/output.pdf`.
 
 4. Failed to render my book for PDF in `mdbook-pdf`!
 
-Will appreciate if you can report it to the [issue tracker](https://github.com/HollowMan6/mdbook-pdf/issues/new) providing all the traces for `mdbook-pdf` rendering.
+Will appreciate if you can report it to the [issue tracker](https://github.com/HollowMan6/mdbook-pdf/issues/new) providing all the traces for `mdbook-pdf` rendering as well as your `book.toml`. You can also provide the link to your book's repository if it's open source.
 
 ```bash
 RUST_BACKTRACE=full RUST_LOG=trace mdbook build

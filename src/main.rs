@@ -178,6 +178,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let page = tab.navigate_to(&url)?.wait_until_navigated()?;
         page.wait_for_element("#content-has-all-loaded-for-mdbook-pdf-generation")?;
 
+        // Accept the Google Analytics cookie.
+        match page.find_element("a.cookieBarConsentButton") {
+            Ok(_) => {
+                page.evaluate("document.querySelector('a.cookieBarConsentButton').click()", false)?;
+                println!("The book you built uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.");
+                println!("Learn more at: https://policies.google.com/technologies/cookies");
+            }
+            Err(_) => (),
+        };
+
         // Find the theme and click it to change the theme.
         if !cloned_cfg.theme.is_empty() {
             match tab.find_element(&format!("button.theme#{}", cloned_cfg.theme.to_lowercase())) {

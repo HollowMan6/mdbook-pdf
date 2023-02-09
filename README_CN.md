@@ -70,7 +70,7 @@ title = "An Example"
 ## 配置
 支持自定义PDF纸张方向、页面缩放比例、纸张宽度和高度、页面边距、生成的PDF页面范围、是否显示页眉和页脚以及自定义其格式等。
 
-查看 [book.toml](test_doc/book.toml#L10-L35) 以了解 `[output.pdf]` 可用配置的详细信息。
+查看 [book.toml](test_doc/book.toml#L10-L36) 以了解 `[output.pdf]` 可用配置的详细信息。
 
 ### 具体参数详解
 - trying-times
@@ -83,7 +83,7 @@ title = "An Example"
 
 本程序支持最新的基于Chromium的浏览器，不支持Safari和Firefox。如果你需要指定，请指定完整的路径，比如说`/usr/bin/foo`。如果指定了错误的可执行文件，则很可能会出现超时错误或者直接报错。
 
-- static_site_url
+- static-site-url
 
 接受输入一个字符串，默认为空`''`。其指定书的静态网站托管URL，从而修复书之外的相对链接，将其转换为绝对路径。
 
@@ -98,6 +98,10 @@ title = "An Example"
 - print-background
   
 接受输入一个布尔值，默认为`false`。其指定是否在PDF中显示背景图片，`true`为显示，`false`为不显示。
+
+- theme
+
+接受输入一个字符串。其指定用于打印书的主题。
 
 - scale
 
@@ -193,7 +197,7 @@ like-wkhtmltopdf = true
 
 4. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
 
-如果您能将它报告给[问题跟踪器](https://github.com/HollowMan6/mdbook-pdf/issues/new)，并提供`mdbook-pdf`渲染时产生的所有跟踪，将不胜感激。
+如果您能将它报告给[问题跟踪器](https://github.com/HollowMan6/mdbook-pdf/issues/new)，并提供`mdbook-pdf`渲染时产生的所有跟踪，以及`book.toml`配置文件，和书的仓库地址（如果有的话），将不胜感激。
 
 ```bash
 RUST_BACKTRACE=full RUST_LOG=trace mdbook build

@@ -157,6 +157,20 @@ jobs:
               name: "Rust_Nomicon"
               backend-depends: ""
               static-url: "https://doc.rust-lang.org/nomicon/"
+            - os: "macos-latest"
+              repo: "https://github.com/google/comprehensive-rust"
+              dir: "comprehensive-rust"
+              name: "Comprehensive_Rust"
+              backend-depends: "helloworld"
+              # backend-depends: "mdbook-svgbob"
+              static-url: "https://google.github.io/comprehensive-rust/"
+            - os: "ubuntu-latest"
+              repo: "https://github.com/google/comprehensive-rust"
+              dir: "comprehensive-rust"
+              name: "Comprehensive_Rust"
+              backend-depends: "helloworld"
+              # backend-depends: "mdbook-svgbob"
+              static-url: "https://google.github.io/comprehensive-rust/"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -171,6 +185,8 @@ jobs:
         if: matrix.backend-depends != ''
         run: |
           cargo install ${{ matrix.backend-depends }}
+          ## TODO: Remove when issue gets fixed
+          cargo install --git https://github.com/HollowMan6/mdbook-svgbob
       - name: Build and install mdbook executable
         run: |
           git clone https://github.com/HollowMan6/mdbook mdbook_exec
@@ -269,6 +285,12 @@ jobs:
               name: "Rust_Nomicon"
               backend-depends: ""
               static-url: "https://doc.rust-lang.org/nomicon/"
+            - repo: "https://github.com/google/comprehensive-rust"
+              dir: "comprehensive-rust"
+              name: "Comprehensive_Rust"
+              backend-depends: "helloworld"
+              # backend-depends: "mdbook-svgbob"
+              static-url: "https://google.github.io/comprehensive-rust/"
     runs-on: "windows-latest"
     steps:
       - uses: actions/checkout@v3
@@ -283,6 +305,8 @@ jobs:
         if: matrix.backend-depends != ''
         run: |
           cargo install ${{ matrix.backend-depends }}
+          ## TODO: Remove when issue gets fixed
+          cargo install --git https://github.com/HollowMan6/mdbook-svgbob
       - name: Build and install mdbook executable
         run: |
           git clone https://github.com/HollowMan6/mdbook mdbook_exec
