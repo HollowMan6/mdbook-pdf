@@ -185,10 +185,7 @@ jobs:
           cargo install ${{ matrix.backend-depends }}
       - name: Build and install mdbook executable
         run: |
-          git clone https://github.com/HollowMan6/mdbook mdbook_exec
-          cd mdbook_exec
-          cargo build --release
-          cp target/release/mdbook /usr/local/bin/
+          cargo install -f --git https://github.com/HollowMan6/mdBook mdbook
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
@@ -302,19 +299,16 @@ jobs:
           cargo install ${{ matrix.backend-depends }}
       - name: Build and install mdbook executable
         run: |
-          git clone https://github.com/HollowMan6/mdbook mdbook_exec
-          cd mdbook_exec
-          cargo build --release
-          cp target/release/mdbook.exe .
+          cargo install -f --git https://github.com/HollowMan6/mdBook mdbook
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
           pip install .
-          cp target/debug/mdbook-pdf.exe mdbook_exec
+          cp target/debug/mdbook-pdf.exe .
       - name: Build Test Docs for PDF
         run: |
           git clone ${{ matrix.repo }}
-          $env:Path += ";$pwd\mdbook_exec"
+          $env:Path += ";$pwd"
           cd ${{ matrix.dir }}
           echo "[output.pdf]" >> book.toml
           echo "display-header-footer = true" >> book.toml

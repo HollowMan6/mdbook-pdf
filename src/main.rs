@@ -173,7 +173,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         // Create a new browser window.
         let browser = Browser::new(launch_opts)?;
-        let tab = browser.wait_for_initial_tab()?;
+        let tab = browser.new_tab()?;
         tab.set_default_timeout(std::time::Duration::from_secs(300));
         let page = tab.navigate_to(&url)?.wait_until_navigated()?;
         page.wait_for_element("#content-has-all-loaded-for-mdbook-pdf-generation")?;
