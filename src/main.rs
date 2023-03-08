@@ -1,6 +1,6 @@
 /**
  * mdbook-pdf
- * Copyright (C) 2022 Hollow Man
+ * Copyright (C) 2022-2023 Hollow Man
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -141,13 +141,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let launch_opts = LaunchOptionsBuilder::default()
             .headless(true)
             .sandbox(false)
-            .ignore_certificate_errors(true)
             .idle_browser_timeout(Duration::from_secs(600))
             .path(browser_binary)
             .args(vec![
                 OsStr::new("--disable-pdf-tagging"),
                 OsStr::new("--unlimited-storage"),
-                OsStr::new("--disable-web-security"),
                 OsStr::new("--webkit-print-color-adjust"),
             ])
             .build()?;

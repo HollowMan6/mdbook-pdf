@@ -1,0 +1,72 @@
+name: Docker
+
+on:
+  workflow_dispatch:  # Allow manual triggers
+    inputs:
+      tags:
+        description: 'Tags'
+        required: false
+  push:
+    # Publish `main` as Docker `latest` image.
+    branches:
+      - main
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+env:
+  # Change variable to your image's name.
+  IMAGE_NAME: mdbook-pdf
+
+jobs:
+  # Push image to GitHub Packages / Docker Hub.
+  # See also https://docs.docker.com/docker-hub/builds/
+  image:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - site: docker.io
+            username: DOCKERHUB_UN
+            password: DOCKERHUB_PW
+          - site: ghcr.io
+            username: CR_UN
+            password: github_token
+    if: github.event.repository.owner.login == 'HollowMan6'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+
+      - name: Log into Container Registry
+        run: echo ${{ secrets[matrix.password] }} | docker login ${{ matrix.site }} -u ${{ secrets[matrix.username] }} --password-stdin
+
+      - name: Build Mutiple-Platform Image and Push to Docker Hub
+        run: |
+          IMAGE_ID=${{ matrix.site }}/${{ secrets[matrix.username] }}/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          if [ -z "${{ github.event.inputs.tags }}" ]
+          then
+            # Strip git ref prefix from version
+            VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+            # Strip "v" prefix from tag name
+            [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+            # Use Docker `latest` tag convention
+            [ "$VERSION" == "main" ] && VERSION=latest
+          else
+            VERSION=${{ github.event.inputs.tags }}
+          fi
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION                       
+          docker buildx build -t $IMAGE_ID:$VERSION --platform linux/amd64,linux/386 --push .

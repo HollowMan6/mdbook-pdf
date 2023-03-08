@@ -67,6 +67,13 @@ title = "An Example"
 
 最后，您可以使用 `mdbook build` 命令生成书籍并获取PDF文件，您的PDF文件将被存放在`book/pdf/output.put`。
 
+## 使用 Docker 运行
+如果你的书没有 mdBook 以外的依赖项，你也可以使用这个 [docker image](https://hub.docker.com/r/hollowman6/mdbook-pdf)。
+
+```bash
+docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
+```
+
 ## 配置
 支持自定义PDF纸张方向、页面缩放比例、纸张宽度和高度、页面边距、生成的PDF页面范围、是否显示页眉和页脚以及自定义其格式等。
 

@@ -65,6 +65,13 @@ title = "An Example"
 
 Finally you can build your book and get the PDF file with `mdbook build` command, your PDF file will be available at `book/pdf/output.pdf`.
 
+## Run with Docker
+You can also use this [docker image](https://hub.docker.com/r/hollowman6/mdbook-pdf) if your book doesn't have dependencies other than mdBook.
+
+```bash
+docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
+```
+
 ## Configuration
 Support customize PDF paper orientation, scale of the webpage rendering, paper width and height, page margins, generated PDF page ranges, whether to display header and footer as well as customize their formats, and more.
 
