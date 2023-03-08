@@ -33,7 +33,7 @@
 
 如果需要最新版的编译二进制文件，请确保 Rust 编译环境可用（`cargo build`），然后执行`git clone https://github.com/HollowMan6/mdbook-pdf.git`，在然后在克隆下来的文件夹中运行`cargo build --release`，在`target/release/`中获取可执行文件，并将其放入PATH。
 
-为了使得程序能够正常运行，请确保计算机上安装了 Google Chrome / Chromium / Microsoft Edge，（安装在默认的位置，在当前的PATH中，或配置了二进制文件位置），因为现在自动下载 Chromium 功能还[不可用](https://github.com/atroche/rust-headless-chrome/issues/286).
+为了使得程序能够正常运行，请确保计算机上在运行本程序之前已经安装了 Google Chrome / Chromium / Microsoft Edge，（安装在默认的位置，在当前的PATH中，或配置了二进制文件位置）。如果没有安装，并且程序启用了`fetch`功能(默认未开启，需使用`cargo install mdbook-pdf --features fetch`重新编译开启)，程序将会尝试自动下载 Chromium 浏览器并运行（注意：如在Linux中使用可能会存在chromium依赖不满足/非x86_64无法适配的问题）。
 
 - 在Windows 10及以上该程序无需安装任何额外软件即可正常生成 PDF，因为 Microsoft Edge 是 Windows 系统自带的浏览器。当然如果考虑到对没有自带安装 Edge 的老版本Windows的支持，在电脑上安装一个 Google Chrome 即可。
 - 在 macOS 中需要下载并安装 [Google Chrome](https://www.google.com/chrome/) 或者 [Microsoft Edge](https://www.microsoft.com/zh-cn/edge) 或者 Chromium。

@@ -1,10 +1,12 @@
 # mdbook-pdf
+[![](https://dockeri.co/image/hollowman6/mdbook-pdf)](https://hub.docker.com/r/hollowman6/mdbook-pdf)
 
 [![last-commit](https://img.shields.io/github/last-commit/HollowMan6/mdbook-pdf)](https://github.com/HollowMan6/mdbook-pdf/graphs/commit-activity)
 [![release-date](https://img.shields.io/github/release-date/HollowMan6/mdbook-pdf)](https://github.com/HollowMan6/mdbook-pdf/releases)
 [![Crate](https://img.shields.io/crates/v/mdbook-pdf.svg)](https://crates.io/crates/mdbook-pdf)
 ![mdbook-pdf build](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20build/badge.svg)
 ![mdbook-pdf test](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20test/badge.svg)
+![Python package](https://github.com/HollowMan6/mdbook-pdf/workflows/Python%20package/badge.svg)
 
 [![Followers](https://img.shields.io/github/followers/HollowMan6?style=social)](https://github.com/HollowMan6?tab=followers)
 [![watchers](https://img.shields.io/github/watchers/HollowMan6/mdbook-pdf?style=social)](https://github.com/HollowMan6/mdbook-pdf/watchers)
@@ -31,7 +33,7 @@ Otherwise, make sure the [rust compiling environment](https://www.rust-lang.org/
 If you want to compile the latest version, make sure the Rust build environment is available (`cargo build`).
 Then run `git clone https://github.com/HollowMan6/mdbook-pdf.git`, in the cloned folder, run `cargo build --release` , get the executable in `target/release/`, and put it in PATH.
 
-For running, have Google Chrome / Chromium / Microsoft Edge available (installed at the default location, in PATH or binary location configured) as currently, automatically downloading Chromium binary [isn't available](https://github.com/atroche/rust-headless-chrome/issues/286) (will update once upstream fixes such support).
+For running, please have Google Chrome / Chromium / Microsoft Edge already available (installed at the default location, in PATH or binary location configured). If not, and `mdbook-pdf` has the `fetch` feature enabled (It is not enabled by default, you need to use `cargo install mdbook-pdf --features fetch` to recompile for enabling), the program will try to automatically download the Chromium browser and run it (Note: if you are on Linux, there may be problems if chromium dependencies are not satisfied / using non-x86_64 architectures).
 
 - On Windows 10 and above, the program can generate PDF normally without installing any additional software, because Microsoft Edge is the browser provided with Windows system. Of course, considering the support for the older versions of Windows without Edge, you can install Google Chrome on your computer.
 - In MacOS, you need to install [Google Chrome](https://www.google.com/chrome/) / [Microsoft Edge](https://www.microsoft.com/en-us/edge) or Chromium.
