@@ -15,6 +15,7 @@
 
 from pypdf import PdfReader, PdfWriter
 from pypdf.generic import Fit
+import urllib.parse
 import lxml.html
 import re
 import json
@@ -45,7 +46,7 @@ def add_wkhtmltopdf_like_outline(html_page, reader, writer):
             if not results.tag[1:].isdigit():
                 continue
             level = int(results.tag[1:])
-            dest = reader.named_destinations["/{}".format(id)]
+            dest = reader.named_destinations["/{}".format(urllib.parse.quote(id))]
             parent = None
             if level > 1:
                 temp = parent_dict
@@ -70,7 +71,7 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
         if len(section) > 0:
             parse_toc(section[0], reader, writer, parent_dict, level + 1)
         else:
-            dest_name = "/"
+            dest_name = ""
             a_element = None
             for element in head.iter():
                 if element.tag == "a" and "href" in element.attrib:
@@ -84,6 +85,7 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
             for content in a_element.attrib["href"].split("#"):
                 dest_name += content.rstrip(".html").replace("/", "-") + "-"
             dest_name = dest_name.rstrip("-")
+            dest_name = "/{}".format(urllib.parse.quote(dest_name))
             dest = None
             if dest_name in reader.named_destinations:
                 dest = reader.named_destinations[dest_name]
