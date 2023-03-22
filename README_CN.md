@@ -211,5 +211,5 @@ RUST_BACKTRACE=full RUST_LOG=trace mdbook build
 ```
 
 ## 致谢
-
-本项目依赖于 [headless_chrome](https://github.com/atroche/rust-headless-chrome)。因其一直未发布新版，且默认超时时间对PDF生成不友好，所以使用了我的[Fork 版本](https://github.com/HollowMan6/rust-headless-chrome)发布了[mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome)，将相关超时时间扩大为600秒，作为本项目的子模块，从而使得项目能够发布在[Crates.io](https://crates.io/)
+- 为了解决问题 [#17](https://github.com/HollowMan6/mdbook-pdf/issues/17) 以便`mdbook-pdf`可以支持非常大的图像，我使用我的[分叉版本](https://github.com/HollowMan6/mdbook-pdf-tungstenite) 发布 [mdbook-pdf-tungstenite](https://crates.io/crates/mdbook-pdf-tungstenite) 用于在从提供的流中读取帧时删除 messageTooLong 检查。
+- 本项目依赖于 [headless_chrome](https://github.com/atroche/rust-headless-chrome)。因其默认超时时间对PDF生成不友好并且由于刚刚提及的问题，所以使用了我的[分叉版本](https://github.com/HollowMan6/rust-headless-chrome)发布了[mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome)，将相关超时时间扩大为600秒并使用`mdbook-pdf-tungstenite`，从而使得项目能够发布在[Crates.io](https://crates.io/)
