@@ -169,6 +169,18 @@ jobs:
               name: "Comprehensive_Rust"
               backend-depends: "mdbook-svgbob"
               static-url: "https://google.github.io/comprehensive-rust/"
+            - os: "macos-latest"
+              repo: "https://github.com/CnTransGroup/EffectiveModernCppChinese"
+              dir: "EffectiveModernCppChinese"
+              name: "Effective_Modern_C++"
+              backend-depends: ""
+              static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
+            - os: "ubuntu-latest"
+              repo: "https://github.com/CnTransGroup/EffectiveModernCppChinese"
+              dir: "EffectiveModernCppChinese"
+              name: "Effective_Modern_C++"
+              backend-depends: ""
+              static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -283,6 +295,11 @@ jobs:
               name: "Comprehensive_Rust"
               backend-depends: "mdbook-svgbob"
               static-url: "https://google.github.io/comprehensive-rust/"
+            - repo: "https://github.com/CnTransGroup/EffectiveModernCppChinese"
+              dir: "EffectiveModernCppChinese"
+              name: "Effective_Modern_C++"
+              backend-depends: ""
+              static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
     runs-on: "windows-latest"
     steps:
       - uses: actions/checkout@v3
