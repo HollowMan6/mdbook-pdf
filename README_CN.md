@@ -18,7 +18,7 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/context:python)
 
-[English](README.md)
+[English](https://github.com/HollowMan6/mdbook-pdf/blob/main/README.md)
 
 [博客](https://blog.csdn.net/qq_18572023/article/details/122753374)
 
@@ -77,7 +77,7 @@ docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
 ## 配置
 支持自定义PDF纸张方向、页面缩放比例、纸张宽度和高度、页面边距、生成的PDF页面范围、是否显示页眉和页脚以及自定义其格式等。
 
-查看 [book.toml](test_doc/book.toml#L10-L36) 以了解 `[output.pdf]` 可用配置的详细信息。
+查看 [book.toml](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L10-L36) 以了解 `[output.pdf]` 可用配置的详细信息。
 
 ### 具体参数详解
 - trying-times
@@ -175,7 +175,7 @@ docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
 
 我已经提交了[一个 mdBook 的拉取请求](https://github.com/rust-lang/mdBook/pull/1738)，该拉取请求通过将打印页面 (print.html) 上的链接指向打印页面上的锚点来解决此问题，但尚未合并。您可以尝试[我的拉取请求分支](https://github.com/HollowMan6/mdBook) 以使其正常工作。
 
-如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](test_doc/book.toml#L17-L18)以便修复。
+如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L17-L18)以便修复。
 
 3. 可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？
 

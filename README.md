@@ -17,7 +17,7 @@
 [![GPL Licence](https://img.shields.io/badge/license-GPL-blue)](https://opensource.org/licenses/GPL-3.0/)
 [![Repo-Size](https://img.shields.io/github/repo-size/HollowMan6/mdbook-pdf.svg)](https://github.com/HollowMan6/mdbook-pdf/archive/master.zip)
 
-[中文](README_CN.md)
+[中文](https://github.com/HollowMan6/mdbook-pdf/blob/main/README_CN.md)
 
 [Blog](https://hollowmansblog.wordpress.com/2022/01/30/mdbook-pdf-a-mdbook-backend-for-generating-pdf-files/)
 
@@ -77,7 +77,7 @@ docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
 ## Configuration
 Support customize PDF paper orientation, scale of the webpage rendering, paper width and height, page margins, generated PDF page ranges, whether to display header and footer as well as customize their formats, and more.
 
-Check [book.toml](test_doc/book.toml#L10-L36) and comments for details for the available configurations of `[output.pdf]`.
+Check [book.toml](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L10-L36) and comments for details for the available configurations of `[output.pdf]`.
 
 ## Common Issues
 1. Support for Firefox in `mdbook-pdf`!
@@ -88,7 +88,7 @@ Currently, according to [Puppeteer's documentation](https://pptr.dev/#?product=P
 
 I've already submitted [a PR for mdBook](https://github.com/rust-lang/mdBook/pull/1738) to fix this by making print page (print.html) links link to anchors on the print page, but it's not merged yet. You can try [my PR fork](https://github.com/HollowMan6/mdBook) for this to work.
 
-If you have relative links that link outside the book, please provide the [static hosting site URL](test_doc/book.toml#L17-L18) for it to get fixed.
+If you have relative links that link outside the book, please provide the [static hosting site URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L17-L18) for it to get fixed.
 
 3. Can you add the bookmark to the PDF reflecting the Table of Contents, just like what [wkhtmltopdf](https://wkhtmltopdf.org/) supported?
 

@@ -85,7 +85,8 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
             for content in a_element.attrib["href"].split("#"):
                 dest_name += content.rstrip(".html").replace("/", "-") + "-"
             dest_name = dest_name.rstrip("-")
-            dest_name = "/{}".format(urllib.parse.quote(dest_name))
+            dest_name = "/{}".format(urllib.parse.quote(dest_name.lower()))
+            dest_name = dest_name.replace(".", "")
             dest = None
             if dest_name in reader.named_destinations:
                 dest = reader.named_destinations[dest_name]
