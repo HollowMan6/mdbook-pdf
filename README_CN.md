@@ -15,9 +15,6 @@
 [![GPL Licence](https://img.shields.io/badge/license-GPL-blue)](https://opensource.org/licenses/GPL-3.0/)
 [![Repo-Size](https://img.shields.io/github/repo-size/HollowMan6/mdbook-pdf.svg)](https://github.com/HollowMan6/mdbook-pdf/archive/master.zip)
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/HollowMan6/mdbook-pdf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/HollowMan6/mdbook-pdf/context:python)
-
 [English](https://github.com/HollowMan6/mdbook-pdf/blob/main/README.md)
 
 [博客](https://blog.csdn.net/qq_18572023/article/details/122753374)

@@ -46,7 +46,8 @@ def add_wkhtmltopdf_like_outline(html_page, reader, writer):
             if not results.tag[1:].isdigit():
                 continue
             level = int(results.tag[1:])
-            dest = reader.named_destinations["/{}".format(urllib.parse.quote(id))]
+            dest = reader.named_destinations["/{}".format(
+                urllib.parse.quote(id))]
             parent = None
             if level > 1:
                 temp = parent_dict
@@ -57,7 +58,7 @@ def add_wkhtmltopdf_like_outline(html_page, reader, writer):
 
             if dest.get('/Type') == '/Fit':
                 update_parent_dict(parent_dict, level, writer.add_outline_item(
-                    results.text_content(), 0, parent))
+                    results.text_content(), None, parent))
                 continue
             update_parent_dict(parent_dict, level, writer.add_outline_item(
                 results.text_content(), reader.get_destination_page_number(
@@ -72,46 +73,50 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
             parse_toc(section[0], reader, writer, parent_dict, level + 1)
         else:
             dest_name = ""
-            a_element = None
+            target_element = None
             for element in head.iter():
-                if element.tag == "a" and "href" in element.attrib:
-                    a_element = element
+                if element.tag == "a" or element.tag == "div":
+                    target_element = element
                     break
             to_remove = head.find_class("toggle")
             for element in to_remove:
                 element.getparent().remove(element)
-            if a_element is None:
+            if target_element is None:
                 continue
-            for content in a_element.attrib["href"].split("#"):
-                dest_name += content.rstrip(".html").replace("/", "-") + "-"
-            dest_name = dest_name.rstrip("-")
-            dest_name = "/{}".format(urllib.parse.quote(dest_name.lower()))
-            dest_name = dest_name.replace(".", "")
             dest = None
-            if dest_name in reader.named_destinations:
-                dest = reader.named_destinations[dest_name]
-            else:
-                for d in reader.named_destinations.items():
-                    if d[0].startswith(dest_name):
-                        dest = d[1]
-                        break
-            if not dest:
-                continue
             parent = None
-            if level > 1:
-                temp = parent_dict
-                for _ in range(1, level - 1):
-                    if temp["child"] and temp["child"]["node"]:
-                        temp = temp["child"]
-                parent = temp["node"]
+            if "href" in element.attrib:
+                for content in target_element.attrib["href"].split("#"):
+                    dest_name += content.rstrip(".html").replace("/",
+                                                                 "-") + "-"
+                dest_name = dest_name.rstrip("-")
+                dest_name = "/{}".format(urllib.parse.quote(dest_name.lower()))
+                dest_name = dest_name.replace(".", "")
+                if dest_name in reader.named_destinations:
+                    dest = reader.named_destinations[dest_name]
+                else:
+                    for d in reader.named_destinations.items():
+                        if d[0].startswith(dest_name):
+                            dest = d[1]
+                            break
+                if not dest:
+                    continue
+                if level > 1:
+                    temp = parent_dict
+                    for _ in range(1, level - 1):
+                        if temp["child"] and temp["child"]["node"]:
+                            temp = temp["child"]
+                    parent = temp["node"]
 
-            if dest.get('/Type') == '/Fit':
-                update_parent_dict(parent_dict, level, writer.add_outline_item(
-                    head.text_content(), 0, parent))
-                continue
+                if dest.get('/Type') == '/Fit':
+                    update_parent_dict(parent_dict, level, writer.add_outline_item(
+                        head.text_content(), None, parent))
+                    continue
+            page = None
+            if dest:
+                page = reader.get_destination_page_number(dest)
             update_parent_dict(parent_dict, level, writer.add_outline_item(
-                head.text_content(), reader.get_destination_page_number(
-                    dest), parent))
+                head.text_content(), page, parent))
 
 
 def add_toc_outline(html_page, reader, writer):
