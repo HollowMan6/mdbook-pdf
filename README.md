@@ -94,7 +94,7 @@ If you have relative links that link outside the book, please provide the [stati
 
 This should be realized by Chromium, and an issue has already been filed for this [here](https://bugs.chromium.org/p/chromium/issues/detail?id=781797).
 
-Initial support for the bookmark/outline of the PDF file has already been available ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and ***the [mdbook version](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 for fixing the broken links in `print.html`***.
+Initial support for the bookmark/outline of the PDF file has already been available ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and ***the [mdbook version](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 (by `cargo install --git https://github.com/HollowMan6/mdBook mdbook` instead) for fixing the broken links in `print.html`***.
 
 You can install this backend by `pip install mdbook-pdf-outline`.
 
