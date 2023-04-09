@@ -65,10 +65,16 @@ title = "An Example"
 最后，您可以使用 `mdbook build` 命令生成书籍并获取PDF文件，您的PDF文件将被存放在`book/pdf/output.put`。
 
 ## 使用 Docker 运行
-如果你的书没有 mdBook 以外的依赖项，你也可以使用这个 [docker image](https://hub.docker.com/r/hollowman6/mdbook-pdf)。
+你也可以使用这个 [docker image](https://hub.docker.com/r/hollowman6/mdbook-pdf)。
 
 ```bash
 docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
+```
+
+如果你的书有其他 Rust 依赖项，你可以在你的本地机器上安装它们（如果使用 Linux），或者如果你的当前操作系统不是 Linux，将对应架构的 Linux 可执行文件下载到一个目录，用该目录路径替换 `~/.cargo/bin`。
+
+```bash
+docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook-pdf
 ```
 
 ## 配置

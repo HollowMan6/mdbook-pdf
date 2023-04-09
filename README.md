@@ -68,10 +68,16 @@ title = "An Example"
 Finally you can build your book and get the PDF file with `mdbook build` command, your PDF file will be available at `book/pdf/output.pdf`.
 
 ## Run with Docker
-You can also use this [docker image](https://hub.docker.com/r/hollowman6/mdbook-pdf) if your book doesn't have dependencies other than mdBook.
+You can also use this [docker image](https://hub.docker.com/r/hollowman6/mdbook-pdf).
 
 ```bash
 docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
+```
+
+If your book have other Rust dependencies, you can install them on your local machine (if using Linux), or if you are not using Linux, download the Linux executables of corresponding architecture to a dir, replace `~/.cargo/bin` with your path.
+
+```bash
+docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook-pdf
 ```
 
 ## Configuration

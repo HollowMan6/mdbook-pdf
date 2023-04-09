@@ -20,4 +20,8 @@ RUN pip3 install --no-cache-dir /mdbook-pdf \
 COPY --from=builder /usr/local/cargo/bin/mdbook-pdf /usr/local/bin/mdbook-pdf
 COPY --from=builder /usr/local/cargo/bin/mdbook /usr/local/bin/mdbook
 WORKDIR /book
+
+# Add other mdbook backend at /mdbook dir
+ENV PATH="$PATH:/mdbook"
+
 ENTRYPOINT [ "mdbook", "build" ]
