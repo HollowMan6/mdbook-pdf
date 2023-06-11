@@ -1,6 +1,11 @@
 /**
  * mdbook-pdf
- * Copyright (C) 2022-2023 Hollow Man
+ * A PDF generator for mdBook using headless Chrome.
+ * 
+ * Author:  Hollow Man <hollowman@opensuse.org>
+ * License: GPL-3.0
+ * 
+ * Copyright (C) 2022-2023 Hollow Man (@HollowMan6)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,9 +64,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut buf_reader = BufReader::new(file);
     let mut contents = String::new();
     buf_reader.read_to_string(&mut contents)?;
-    contents = contents.replacen(
-        "</script>",
-        "</script>
+
+    // Insert a link to the page div in the print.html to make sure that generated pdf
+    // contains the destination for ToC to locate the specific page in pdf.
+    let mut toc_fix = "<div style=\"display: none\">".to_owned();
+    for item in ctx.book.iter() {
+        if let mdbook::book::BookItem::Chapter(chapter) = item {
+            let path = chapter.path.clone();
+            if let Some(path) = path {
+                let print_page_id = {
+                    let mut base = path.display().to_string();
+                    if base.ends_with(".md") {
+                        base.truncate(base.len() - 3);
+                    }
+                    &base
+                        .replace("/", "-")
+                        .replace("\\", "-")
+                        .to_ascii_lowercase()
+                };
+                toc_fix.push_str(&(format!(r##"<a href="#{print_page_id}">{print_page_id}</a>"##)));
+            }
+        }
+    }
+    toc_fix.push_str("</div>");
+
+    let script = "</script>
 
         <!-- Custom JS scripts for mdbook-pdf PDF generation -->
         <script type='text/javascript'>
@@ -86,7 +113,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     markAllContentHasLoadedForPrinting();
                 }
             });
-        </script>",
+        </script>
+    ".to_owned();
+
+    contents = contents.replacen(
+        "</script>",
+        &(script + &toc_fix),
         1,
     );
     if !cfg.static_site_url.is_empty() {
