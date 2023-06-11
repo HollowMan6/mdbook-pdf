@@ -83,6 +83,6 @@ jobs:
           path: ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
 
       - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@unstable/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
