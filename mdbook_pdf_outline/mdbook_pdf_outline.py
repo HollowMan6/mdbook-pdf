@@ -19,6 +19,7 @@ import urllib.parse
 import lxml.html
 import re
 import json
+import sys
 
 
 buffer = []
@@ -143,7 +144,7 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
             )
 
 
-def add_toc_outline(html_page, reader, writer):
+def add_toc_from_html_outline(html_page, reader, writer):
     parent_dict = {"node": None, "child": {}}
     with open(html_page, "r", encoding="utf8") as f:
         data = f.read()
@@ -155,8 +156,53 @@ def add_toc_outline(html_page, reader, writer):
             break
 
 
+def process_toc(section, reader, writer, keys, parent=None):
+    page = None
+    
+    if section == "Separator":
+        pass
+    elif "PartTitle" in section:
+        name = section["PartTitle"]
+        node = writer.add_outline_item(name, None, parent)
+    elif "Chapter" in section:
+        dest_name = section["Chapter"]["name"].lower().replace(" ", "-")
+        dest_name = "/" + urllib.parse.quote(dest_name, "")
+
+        if dest_name in keys:
+            i = 1
+            while f"{dest_name}-{i}" in keys:
+                i += 1
+            dest_name = f"{dest_name}-{i}"
+        keys.add(dest_name)
+
+        dest = reader.named_destinations.get(dest_name)
+        if dest:
+            page = reader.get_destination_page_number(dest)
+
+        name = section["Chapter"]["name"]
+        if section["Chapter"]["number"] != None:
+            number = ".".join(str(n) for n in section["Chapter"]["number"])
+            name = f"{number}. {name}"
+
+        node = writer.add_outline_item(name, page, parent)
+
+        for section in section["Chapter"]["sub_items"]:
+            process_toc(section, reader, writer, keys, node)
+    else:
+        print(f"Unknown section type {section}")
+
+
+def add_toc_from_json_outline(json_book, reader, writer):
+    keys = set()
+    for section in json_book["sections"]:
+        process_toc(section, reader, writer, keys)
+
+
 def main():
-    conf = json.loads(input())["config"]["output"]["pdf-outline"]
+    sys.stdin.reconfigure(encoding="utf8")
+    context = json.loads(sys.stdin.read())
+    #context = json.loads(input())
+    conf = context["config"]["output"]["pdf-outline"]
 
     reader = PdfReader("../pdf/output.pdf")
 
@@ -165,8 +211,22 @@ def main():
 
     if "like-wkhtmltopdf" in conf and conf["like-wkhtmltopdf"]:
         add_wkhtmltopdf_like_outline("../html/print.html", reader, writer)
+    elif "toc-from-json" in conf and conf["toc-from-json"]:
+        add_toc_from_json_outline(context["book"], reader, writer)
     else:
-        add_toc_outline("../html/print.html", reader, writer)
+        add_toc_from_html_outline("../html/print.html", reader, writer)
+
+    meta = context["config"]["book"]
+    writer.add_metadata({
+        "/DisplayDocTitle": False,
+        "/Title": meta.get("title") or "",
+        "/Author": ", ".join(meta["authors"]),
+        "/Subject": meta.get("description") or "",
+        "/CreationDate": reader.metadata["/CreationDate"],
+        "/ModDate": reader.metadata["/ModDate"],
+        "/Creator": "mdBook-pdf",
+        "/Lang": meta.get("language") or "",
+    })
 
     with open("output.pdf", "wb") as f:
         writer.write(f)
