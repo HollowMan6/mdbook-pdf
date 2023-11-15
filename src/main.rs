@@ -189,8 +189,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             margin_right: Some(cloned_cfg.margin_right),
             page_ranges: Some(cloned_cfg.page_ranges),
             ignore_invalid_page_ranges: Some(cloned_cfg.ignore_invalid_page_ranges),
-            header_template: Some(cloned_cfg.header_template),
-            footer_template: Some(cloned_cfg.footer_template),
+            header_template: cloned_cfg.header_template_path.map_or_else(
+                || Some(cloned_cfg.header_template),
+                |path| {
+                    let file = fs::OpenOptions::new().read(true).open(path).unwrap();
+                    let mut buf_reader = BufReader::new(file);
+                    let mut contents = String::new();
+                    buf_reader.read_to_string(&mut contents).unwrap();
+                    Some(contents)
+                },
+            ),
+            footer_template: cloned_cfg.footer_template_path.map_or_else(
+                || Some(cloned_cfg.footer_template),
+                |path| {
+                    let file = fs::OpenOptions::new().read(true).open(path).unwrap();
+                    let mut buf_reader = BufReader::new(file);
+                    let mut contents = String::new();
+                    buf_reader.read_to_string(&mut contents).unwrap();
+                    Some(contents)
+                },
+            ),
             prefer_css_page_size: Some(cloned_cfg.prefer_css_page_size),
             transfer_mode: None,
         };
@@ -287,7 +305,9 @@ pub struct PrintOptions {
     pub page_ranges: String,
     pub ignore_invalid_page_ranges: bool,
     pub header_template: String,
+    pub header_template_path: Option<String>,
     pub footer_template: String,
+    pub footer_template_path: Option<String>,
     pub prefer_css_page_size: bool,
 }
 
@@ -316,7 +336,9 @@ impl Default for PrintOptions {
             page_ranges: "".to_string(),
             ignore_invalid_page_ranges: false,
             header_template: "".to_string(),
+            header_template_path: None,
             footer_template: "".to_string(),
+            footer_template_path: None,
             prefer_css_page_size: false,
         }
     }
