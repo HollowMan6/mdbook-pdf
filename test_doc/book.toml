@@ -31,11 +31,11 @@ margin-left = 0.5
 margin-right = 0.5
 page-ranges = ""
 ignore-invalid-page-ranges = false
-header-template = "<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>"
-footer-template = "<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>"
+# header-template = "<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>"
+# footer-template = "<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>"
 ## For huge template, you can use the following option to load it from a file.
-# header-template-path = "template/header.html"
-# footer-template-path = "template/footer.html"
+header-template-path = "template/header.html"
+footer-template-path = "template/footer.html"
 prefer-css-page-size = true
 
 [output.pdf-outline]
