@@ -192,7 +192,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             header_template: cloned_cfg.header_template_path.map_or_else(
                 || Some(cloned_cfg.header_template),
                 |path| {
-                    let file = fs::OpenOptions::new().read(true).open(path).unwrap();
+                    let path = ctx.root.join(path);
+                    let file = fs::OpenOptions::new()
+                        .read(true)
+                        .open(&path)
+                        .unwrap_or_else(|_| {
+                            panic!("Unable to open header template at {}", path.display())
+                        });
                     let mut buf_reader = BufReader::new(file);
                     let mut contents = String::new();
                     buf_reader.read_to_string(&mut contents).unwrap();
@@ -202,7 +208,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             footer_template: cloned_cfg.footer_template_path.map_or_else(
                 || Some(cloned_cfg.footer_template),
                 |path| {
-                    let file = fs::OpenOptions::new().read(true).open(path).unwrap();
+                    let path = ctx.root.join(path);
+                    let file = fs::OpenOptions::new()
+                        .read(true)
+                        .open(&path)
+                        .unwrap_or_else(|_| {
+                            panic!("Unable to open footer template at {}", path.display())
+                        });
                     let mut buf_reader = BufReader::new(file);
                     let mut contents = String::new();
                     buf_reader.read_to_string(&mut contents).unwrap();
