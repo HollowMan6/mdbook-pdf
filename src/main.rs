@@ -1,10 +1,10 @@
 /**
  * mdbook-pdf
  * A PDF generator for mdBook using headless Chrome.
- * 
+ *
  * Author:  Hollow Man <hollowman@opensuse.org>
  * License: GPL-3.0
- * 
+ *
  * Copyright (C) 2022-2023 Hollow Man (@HollowMan6)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,10 +77,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     if base.ends_with(".md") {
                         base.truncate(base.len() - 3);
                     }
-                    &base
-                        .replace("/", "-")
-                        .replace("\\", "-")
-                        .to_ascii_lowercase()
+                    &base.replace(['/', '\\'], "-").to_ascii_lowercase()
                 };
                 toc_fix.push_str(&(format!(r##"<a href="#{print_page_id}">{print_page_id}</a>"##)));
             }
@@ -114,27 +111,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             });
         </script>
-    ".to_owned();
+    "
+    .to_owned();
 
-    contents = contents.replacen(
-        "</script>",
-        &(script + &toc_fix),
-        1,
-    );
+    contents = contents.replacen("</script>", &(script + &toc_fix), 1);
     if !cfg.static_site_url.is_empty() {
         contents = A_LINK
             .replace_all(&contents, |caps: &regex::Captures<'_>| {
                 // Ensure that there is no '\' in the link to ensure the following judgement work
-                let link = caps[2].replace("\\", "/");
+                let link = caps[2].replace('\\', "/");
                 // Don't modify links with schemes like `https`, and no need to modify pages inside the book.
-                if !link.starts_with("#")
+                if !link.starts_with('#')
                     && !SCHEME_LINK.is_match(&link)
                     && (link.starts_with("../") || link.contains("/../"))
                 {
                     let mut fixed_link = String::new();
 
                     fixed_link.push_str(&cfg.static_site_url);
-                    if !fixed_link.ends_with("/") {
+                    if !fixed_link.ends_with('/') {
                         fixed_link.push('/');
                     }
                     fixed_link.push_str(&link);
@@ -209,13 +203,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         page.wait_for_element("#content-has-all-loaded-for-mdbook-pdf-generation")?;
 
         // Accept the Google Analytics cookie.
-        match page.find_element("a.cookieBarConsentButton") {
-            Ok(_) => {
-                page.evaluate("document.querySelector('a.cookieBarConsentButton').click()", false)?;
-                println!("The book you built uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.");
-                println!("Learn more at: https://policies.google.com/technologies/cookies");
-            }
-            Err(_) => (),
+        if page.find_element("a.cookieBarConsentButton").is_ok() {
+            page.evaluate(
+                "document.querySelector('a.cookieBarConsentButton').click()",
+                false,
+            )?;
+            println!("The book you built uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.");
+            println!("Learn more at: https://policies.google.com/technologies/cookies");
         };
 
         // Find the theme and click it to change the theme.
@@ -257,7 +251,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .to_str()
             .unwrap()
             .to_owned();
-        fs::write(generated_pdf_path.clone(), &generated_pdf)?;
+        fs::write(generated_pdf_path.clone(), generated_pdf)?;
         println!("PDF successfully generated at: {}", generated_pdf_path);
         break;
     }

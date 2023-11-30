@@ -128,5 +128,3 @@ Will appreciate if you can report it to the [issue tracker](https://github.com/H
 ```bash
 RUST_BACKTRACE=full RUST_LOG=trace mdbook build
 ```
-## Credits
-- This project relies on [headless_chrome](https://github.com/atroche/rust-headless-chrome). Because the default timeout is not friendly to PDF generation, I use my [forked version](https://github.com/HollowMan6/rust-headless-chrome) to published [mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome) for expanding the relevant timeout to 600 seconds, thus enabling the project to be published on [Crates.io](https://crates.io/) as well.

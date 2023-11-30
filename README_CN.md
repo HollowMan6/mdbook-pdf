@@ -212,6 +212,3 @@ like-wkhtmltopdf = true
 ```bash
 RUST_BACKTRACE=full RUST_LOG=trace mdbook build
 ```
-
-## 致谢
-- 本项目依赖于 [headless_chrome](https://github.com/atroche/rust-headless-chrome)。因其默认超时时间对PDF生成不友好，所以使用了我的[分叉版本](https://github.com/HollowMan6/rust-headless-chrome)发布了[mdbook-pdf-headless_chrome](https://crates.io/crates/mdbook-pdf-headless_chrome)，将相关超时时间扩大为600秒，从而使得项目能够发布在[Crates.io](https://crates.io/)
