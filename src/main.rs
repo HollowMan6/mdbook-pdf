@@ -56,6 +56,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap()
         .to_owned();
 
+    if !PathBuf::from(&print_html_path).exists() {
+        println!(
+            "PDF generation failed. The print.html file does not exist at {}.",
+            print_html_path
+        );
+        println!("Verify output.html is active and output.html.print.enabled is set to true in your book.toml.");
+        return Err(Box::try_from(io::Error::new(
+            io::ErrorKind::NotFound,
+            format!("File not found: {}", print_html_path),
+        ))
+        .unwrap());
+    }
+
     // Modify the print.html for custom JS scripts as well as links outside the book.
     let file = fs::OpenOptions::new()
         .read(true)
