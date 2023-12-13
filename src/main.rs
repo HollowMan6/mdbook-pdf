@@ -180,7 +180,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let launch_opts = LaunchOptionsBuilder::default()
             .headless(true)
             .sandbox(false)
-            .idle_browser_timeout(Duration::from_secs(600))
+            .idle_browser_timeout(Duration::from_secs(cfg.timeout))
             .path(browser_binary)
             .args(vec![
                 OsStr::new("--disable-pdf-tagging"),
@@ -211,7 +211,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Create a new browser window.
         let browser = Browser::new(launch_opts)?;
         let tab = browser.new_tab()?;
-        tab.set_default_timeout(std::time::Duration::from_secs(300));
+        tab.set_default_timeout(std::time::Duration::from_secs(cfg.timeout));
         let page = tab.navigate_to(&url)?.wait_until_navigated()?;
         page.wait_for_element("#content-has-all-loaded-for-mdbook-pdf-generation")?;
 
@@ -284,6 +284,7 @@ extern crate serde_derive;
 #[serde(default, rename_all = "kebab-case")]
 pub struct PrintOptions {
     pub trying_times: u64,
+    pub timeout: u64,
     pub browser_binary_path: String,
     pub static_site_url: String,
     pub landscape: bool,
@@ -313,6 +314,7 @@ impl Default for PrintOptions {
     fn default() -> Self {
         PrintOptions {
             trying_times: 1u64,
+            timeout: 600u64,
             browser_binary_path: "".to_string(),
             static_site_url: "".to_string(),
             landscape: false,

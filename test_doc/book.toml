@@ -10,6 +10,8 @@ title = "An Example"
 [output.pdf]
 ## Set for auto-retrying if failed to generate PDF.
 # trying-times = 1
+## Set the timeout in seconds.
+# timeout = 600
 ## This backend only support latest Chromium based browsers, not Safari and Firefox currently.
 ## If needed, please specify the full path.
 ## If you specify the wrong binary, chances are that there will be a timeout error.
