@@ -19,11 +19,11 @@ include = [
 env_logger = "0"
 lazy_static = "1"
 mdbook = "0"
-mdbook-pdf-headless_chrome = "0"
+headless_chrome = "1"
 regex = "1"
 serde = "1"
 serde_derive = "1"
 
 [features]
 # Enables auto fetching chromium support.
-fetch = ["mdbook-pdf-headless_chrome/fetch"]
+fetch = ["headless_chrome/fetch"]
