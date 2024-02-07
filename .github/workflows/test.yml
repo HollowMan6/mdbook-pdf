@@ -183,7 +183,7 @@ jobs:
               static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
       - uses: Swatinem/rust-cache@v2
@@ -307,7 +307,7 @@ jobs:
               static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
     runs-on: "windows-latest"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
       - uses: Swatinem/rust-cache@v2
