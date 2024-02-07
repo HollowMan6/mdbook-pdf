@@ -230,12 +230,12 @@ jobs:
           fi
           mdbook build
       - name: Upload PDF File to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
           path: ${{ matrix.dir }}/book/pdf-outline/*.pdf
       - name: Upload Build HTML to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_HTML
           path: ${{ matrix.dir }}/book/html/*
@@ -347,12 +347,12 @@ jobs:
           echo "[output.pdf-outline]" >> book.toml
           mdbook build
       - name: Upload PDF File to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
           path: ${{ matrix.dir }}/book/pdf-outline/*.pdf
       - name: Upload Build HTML to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_HTML
           path: ${{ matrix.dir }}/book/html/*

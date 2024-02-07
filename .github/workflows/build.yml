@@ -58,7 +58,7 @@ jobs:
           tag: ${{ env.VERSION }}
           overwrite: true
       - name: Upload Binary File to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mdbook-pdf-${{ env.VERSION }}-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/mdbook-pdf
@@ -97,7 +97,7 @@ jobs:
           tag: ${{ env.VERSION }}
           overwrite: true
       - name: Upload Binary File to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mdbook-pdf-${{ env.VERSION }}-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/mdbook-pdf.exe
@@ -138,7 +138,7 @@ jobs:
           tag: ${{ env.VERSION }}
           overwrite: true
       - name: Upload Binary File to Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mdbook-pdf-${{ env.VERSION }}-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/mdbook-pdf
