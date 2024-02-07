@@ -6,6 +6,7 @@
 ![mdbook-pdf build](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20build/badge.svg)
 ![mdbook-pdf test](https://github.com/HollowMan6/mdbook-pdf/workflows/mdbook-pdf%20test/badge.svg)
 
+
 [![Followers](https://img.shields.io/github/followers/HollowMan6?style=social)](https://github.com/HollowMan6?tab=followers)
 [![watchers](https://img.shields.io/github/watchers/HollowMan6/mdbook-pdf?style=social)](https://github.com/HollowMan6/mdbook-pdf/watchers)
 [![stars](https://img.shields.io/github/stars/HollowMan6/mdbook-pdf?style=social)](https://github.com/HollowMan6/mdbook-pdf/stargazers)
@@ -19,7 +20,7 @@
 
 [博客](https://blog.csdn.net/qq_18572023/article/details/122753374)
 
-用 Rust 编写的 [mdBook](https://github.com/rust-lang/mdBook) 后端，基于[headless chrome](https://github.com/atroche/rust-headless-chrome)和[Chrome开发工具协议](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)生成PDF。
+用 Rust 编写的 [mdBook](https://github.com/rust-lang/mdBook) 后端，基于[headless chrome](https://github.com/rust-headless-chrome/rust-headless-chrome)和[Chrome开发工具协议](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)生成PDF。
 
 ## 安装和使用
 由于它是 [mdBook](https://github.com/rust-lang/mdBook) 的插件（后端），首先您应该确保 `mdbook` 可用。
@@ -28,7 +29,7 @@
 
 否则，确保 [rust 编译环境](https://www.rust-lang.org/tools/install)可用，执行`cargo install mdbook-pdf`编译安装即可。
 
-如果需要最新版的编译二进制文件，请确保 Rust 编译环境可用（`cargo build`），然后执行`git clone https://github.com/HollowMan6/mdbook-pdf.git`，在然后在克隆下来的文件夹中运行`cargo build --release`，在`target/release/`中获取可执行文件，并将其放入PATH。
+如果需要最新版的编译二进制文件，请确保 Rust 编译环境可用（`cargo build`），运行 `cargo install --git https://github.com/HollowMan6/mdbook-pdf.git`，或者，您可以克隆存储库并自行编译。（执行`git clone https://github.com/HollowMan6/mdbook-pdf.git`，在然后在克隆下来的文件夹中运行`cargo build --release`，在`target/release/`中获取可执行文件，并将其放入PATH）
 
 为了使得程序能够正常运行，请确保计算机上在运行本程序之前已经安装了 Google Chrome / Chromium / Microsoft Edge，（安装在默认的位置，在当前的PATH中，或配置了二进制文件位置）。如果没有安装，并且程序启用了`fetch`功能(默认未开启，需使用`cargo install mdbook-pdf --features fetch`重新编译开启)，程序将会尝试自动下载 Chromium 浏览器并运行（注意：如在Linux中使用可能会存在chromium依赖不满足/非x86_64无法适配的问题）。
 
@@ -80,7 +81,7 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 ## 配置
 支持自定义PDF纸张方向、页面缩放比例、纸张宽度和高度、页面边距、生成的PDF页面范围、是否显示页眉和页脚以及自定义其格式等。
 
-查看 [book.toml](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L10-L36) 以了解 `[output.pdf]` 可用配置的详细信息。
+查看 [book.toml](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L10-L39) 以了解 `[output.pdf]` 可用配置的详细信息。
 
 ### 具体参数详解
 - trying-times
@@ -171,20 +172,19 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 
 ## 常见问题
 1. 让`mdbook-pdf`支持火狐！
-
-目前，根据[Puppeteer的文档](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions)，[Chrome 开发工具协议 Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) 仅在 Chrome 无头模式中受支持。目前已经有人为此提交了一个[议题](https://github.com/puppeteer/puppeteer/issues/7628)。
+目前，尽管 Puppeteer 根据其[文档](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)，已经支持类似于[Chrome 开发工具协议 Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)的东西，[rust-headless-chrome](https://github.com/rust-headless-chrome/rust-headless-chrome) 并没有。
 
 2. 链接损坏！
 
 我已经提交了[一个 mdBook 的拉取请求](https://github.com/rust-lang/mdBook/pull/1738)，该拉取请求通过将打印页面 (print.html) 上的链接指向打印页面上的锚点来解决此问题，但尚未合并。您可以尝试[我的拉取请求分支](https://github.com/HollowMan6/mdBook) 以使其正常工作。
 
-如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L17-L18)以便修复。
+如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L19-L20)以便修复。
 
 3. 可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？
 
-这应该由 Chromium 实现，并且目前已经有人为此提交了一个[议题](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)。
+~~这应该由 Chromium 实现，并且目前已经有人为此提交了一个[议题](https://issues.chromium.org/issues/40038778)。
 
-已经初步实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). 它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`和常见问题2中提到的修复了`print.html`中损坏链接的[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738) (通过 `cargo install --git https://github.com/HollowMan6/mdBook mdbook`安装) 一起使用。
+已经初步实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)）. 它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`和常见问题2中提到的修复了`print.html`中损坏链接的[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738)（通过 `cargo install --git https://github.com/HollowMan6/mdBook mdbook`安装）一起使用。
 
 您可以通过`pip install mdbook-pdf-outline`安装此后端。
 
@@ -205,7 +205,16 @@ like-wkhtmltopdf = true
 
 最后，您可以在`book/pdfoutline/output.pdf`中找到带有大纲/目录的版本。
 
-4. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
+4. 在 mdbook-pdf 所遵循的 Markdown 源中强制分页！
+
+参考[#9](https://github.com/HollowMan6/mdbook-pdf/discussions/9#discussioncomment-4895678)，您可以使用以下语法在markdown源中强制分页：
+
+```markdown
+<div style="page-break-before:always">&nbsp;</div>
+<p></p>
+```
+
+5. 无法在 `mdbook-pdf` 中将我的书呈现为 PDF！
 
 如果您能将它报告给[问题跟踪器](https://github.com/HollowMan6/mdbook-pdf/issues/new)，并提供`mdbook-pdf`渲染时产生的所有跟踪，以及`book.toml`配置文件，和书的仓库地址（如果有的话），将不胜感激。
 

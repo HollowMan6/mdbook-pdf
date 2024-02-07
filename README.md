@@ -21,7 +21,7 @@
 
 [Blog](https://hollowmansblog.wordpress.com/2022/01/30/mdbook-pdf-a-mdbook-backend-for-generating-pdf-files/)
 
-A backend for [mdBook](https://github.com/rust-lang/mdBook) written in Rust for generating PDF based on [headless chrome](https://github.com/atroche/rust-headless-chrome) and [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF).
+A backend for [mdBook](https://github.com/rust-lang/mdBook) written in Rust for generating PDF based on [headless chrome](https://github.com/rust-headless-chrome/rust-headless-chrome) and [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF).
 
 ## Installation & Usage
 Since it's a plugin (backend) for [mdBook](https://github.com/rust-lang/mdBook), first of all you should ensure that `mdbook` is available.
@@ -30,8 +30,7 @@ If your machine's architecture is `x86_64`, or you are using Linux for `ARM64`, 
 
 Otherwise, make sure the [rust compiling environment](https://www.rust-lang.org/tools/install) is available, execute `cargo install mdbook-pdf` to compile and install.
 
-If you want to compile the latest version, make sure the Rust build environment is available (`cargo build`).
-Then run `git clone https://github.com/HollowMan6/mdbook-pdf.git`, in the cloned folder, run `cargo build --release` , get the executable in `target/release/`, and put it in PATH.
+If you want to compile the latest version, make sure the Rust build environment is available (`cargo build`). Run `cargo install --git https://github.com/HollowMan6/mdbook-pdf.git`, or alternatively, you can clone the repository and compile it yourself. (Run `git clone https://github.com/HollowMan6/mdbook-pdf.git`, in the cloned folder, run `cargo build --release` , get the executable in `target/release/`, and put it in PATH)
 
 For running, please have Google Chrome / Chromium / Microsoft Edge already available (installed at the default location, in PATH or binary location configured). If not, and `mdbook-pdf` has the `fetch` feature enabled (It is not enabled by default, you need to use `cargo install mdbook-pdf --features fetch` to recompile for enabling), the program will try to automatically download the Chromium browser and run it (Note: if you are on Linux, there may be problems if chromium dependencies are not satisfied / using non-x86_64 architectures).
 
@@ -83,24 +82,23 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 ## Configuration
 Support customize PDF paper orientation, scale of the webpage rendering, paper width and height, page margins, generated PDF page ranges, whether to display header and footer as well as customize their formats, and more.
 
-Check [book.toml](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L10-L36) and comments for details for the available configurations of `[output.pdf]`.
+Check [book.toml](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L10-L39) and comments for details for the available configurations of `[output.pdf]`.
 
 ## Common Issues
 1. Support for Firefox in `mdbook-pdf`!
 
-Currently, according to [Puppeteer's documentation](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions), [Chrome DevTools Protocol Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) is only supported in Chrome headless. An issue has already been filed for this [here](https://github.com/puppeteer/puppeteer/issues/7628).
+Currently, although Puppeteer supports something similar to [Chrome DevTools Protocol Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF) according to its [documentation](https://pptr.dev/api/puppeteer.page.pdf), [rust-headless-chrome](https://github.com/rust-headless-chrome/rust-headless-chrome) doesn't.
 
 2. Broken links!
 
 I've already submitted [a PR for mdBook](https://github.com/rust-lang/mdBook/pull/1738) to fix this by making print page (print.html) links link to anchors on the print page, but it's not merged yet. You can try [my PR fork](https://github.com/HollowMan6/mdBook) for this to work.
 
-If you have relative links that link outside the book, please provide the [static hosting site URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L17-L18) for it to get fixed.
+If you have relative links that link outside the book, please provide the [static hosting site URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L19-L20) for it to get fixed.
 
-3. Can you add the bookmark to the PDF reflecting the Table of Contents, just like what [wkhtmltopdf](https://wkhtmltopdf.org/) supported?
+3. Can you add the bookmark to the PDF reflecting the Table of Contents, just like what [wkhtmltopdf](https://wkhtmltopdf.org/) is supported?
 
-This should be realized by Chromium, and an issue has already been filed for this [here](https://bugs.chromium.org/p/chromium/issues/detail?id=781797).
-
-Initial support for the bookmark/outline of the PDF file has already been available ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and ***the [mdbook version](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 (by `cargo install --git https://github.com/HollowMan6/mdBook mdbook` instead) for fixing the broken links in `print.html`***.
+~~This should be realized by Chromium, and an issue has already been filed for this [here](https://issues.chromium.org/issues/40038778).~~
+Initial support for the bookmark/outline of the PDF file has already been available ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and ***the [modified mdbook](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 (by `cargo install --git https://github.com/HollowMan6/mdBook mdbook` instead) for fixing the broken links in `print.html`***.
 
 You can install this backend by `pip install mdbook-pdf-outline`.
 
@@ -121,7 +119,16 @@ like-wkhtmltopdf = true
 
 Finally, you can find the outlined version at `book/pdf-outline/output.pdf`.
 
-4. Failed to render my book for PDF in `mdbook-pdf`!
+4. Force page breaks in the markdown source that is respected by mdbook-pdf!
+
+Referring to [#9](https://github.com/HollowMan6/mdbook-pdf/discussions/9#discussioncomment-4895678), you can use the following syntax to force page breaks in the markdown source:
+
+```markdown
+<div style="page-break-before:always">&nbsp;</div>
+<p></p>
+```
+
+5. Failed to render my book for PDF in `mdbook-pdf`!
 
 Will appreciate if you can report it to the [issue tracker](https://github.com/HollowMan6/mdbook-pdf/issues/new) providing all the traces for `mdbook-pdf` rendering as well as your `book.toml`. You can also provide the link to your book's repository if it's open source.
 
