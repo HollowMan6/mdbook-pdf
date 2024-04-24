@@ -73,6 +73,11 @@ You can also use this [docker image](https://hub.docker.com/r/hollowman6/mdbook-
 docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
 ```
 
+If you encounter architecture compatibility issues, like `docker: no matching manifest for linux/arm64/v8 in the manifest list entries.`, you may need to specify the platform architecture using --platform linux/amd64. The command would then look like this:
+```bash
+docker run --rm --platform linux/amd64 -v /path/to/book:/book hollowman6/mdbook-pdf
+```
+
 If your book have other Rust dependencies, you can install them on your local machine (if using Linux), or if you are not using Linux, download the Linux executables of corresponding architecture to a dir, replace `~/.cargo/bin` with your path.
 
 ```bash
