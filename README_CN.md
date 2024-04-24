@@ -72,6 +72,12 @@ title = "An Example"
 docker run --rm -v /path/to/book:/book hollowman6/mdbook-pdf
 ```
 
+如果您遇到架构兼容性问题，例如`docker: no matching manifest for linux/arm64/v8 in the manifest list entries.`，您可能需要使用 `--platform linux/amd64` 指定平台架构：
+
+````bash
+docker run --rm --platform linux/amd64 -v /path/to/book:/book Hollowman6/mdbook-pdf
+````
+
 如果你的书有其他 Rust 依赖项，你可以在你的本地机器上安装它们（如果使用 Linux），或者如果你的当前操作系统不是 Linux，将对应架构的 Linux 可执行文件下载到一个目录，用该目录路径替换 `~/.cargo/bin`。
 
 ```bash
