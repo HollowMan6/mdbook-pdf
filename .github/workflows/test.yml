@@ -181,6 +181,18 @@ jobs:
               name: "Effective_Modern_C++"
               backend-depends: ""
               static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
+            - os: "macos-latest"
+              repo: "https://github.com/gbadev-org/tonc"
+              dir: "tonc"
+              name: "GBA_Programming_Tutorial"
+              backend-depends: ""
+              static-url: "https://gbadev.net/tonc/"
+            - os: "ubuntu-latest"
+              repo: "https://github.com/gbadev-org/tonc"
+              dir: "tonc"
+              name: "GBA_Programming_Tutorial"
+              backend-depends: ""
+              static-url: "https://gbadev.net/tonc/"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -211,7 +223,7 @@ jobs:
           mv target/debug/mdbook-pdf /usr/local/bin/
       - name: Build Test Docs for PDF
         run: |
-          git clone ${{ matrix.repo }}
+          git clone --recurse-submodules ${{ matrix.repo }}
           cd ${{ matrix.dir }}
           if [ `grep -c "output.pdf" book.toml` -eq '0' ]; then
             echo "[output.pdf]" >> book.toml
@@ -233,12 +245,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
-          path: ${{ matrix.dir }}/book/pdf-outline/*.pdf
+          path: |
+            ${{ matrix.dir }}/book/pdf-outline/*.pdf
+            ${{ matrix.dir }}/output/pdf-outline/*.pdf
       - name: Upload Build HTML to Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_HTML
-          path: ${{ matrix.dir }}/book/html/*
+          path: |
+            ${{ matrix.dir }}/book/html/*
+            ${{ matrix.dir }}/output/html/*
 
   test-win:
     strategy:
@@ -305,6 +321,11 @@ jobs:
               name: "Effective_Modern_C++"
               backend-depends: ""
               static-url: "https://cntransgroup.github.io/EffectiveModernCppChinese/"
+            - repo: "https://github.com/gbadev-org/tonc"
+              dir: "tonc"
+              name: "GBA_Programming_Tutorial"
+              backend-depends: ""
+              static-url: "https://gbadev.net/tonc/"
     runs-on: "windows-latest"
     steps:
       - uses: actions/checkout@v4
@@ -329,7 +350,7 @@ jobs:
           cp target/debug/mdbook-pdf.exe .
       - name: Build Test Docs for PDF
         run: |
-          git clone ${{ matrix.repo }}
+          git clone --recurse-submodules ${{ matrix.repo }}
           $env:Path += ";$pwd"
           cd ${{ matrix.dir }}
           echo "[output.pdf]" >> book.toml
@@ -350,9 +371,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_PDF
-          path: ${{ matrix.dir }}/book/pdf-outline/*.pdf
+          path: |
+            ${{ matrix.dir }}/book/pdf-outline/*.pdf
+            ${{ matrix.dir }}/output/pdf-outline/*.pdf
       - name: Upload Build HTML to Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}_${{ matrix.name }}_HTML
-          path: ${{ matrix.dir }}/book/html/*
+          path: |
+            ${{ matrix.dir }}/book/html/*
+            ${{ matrix.dir }}/output/html/*
