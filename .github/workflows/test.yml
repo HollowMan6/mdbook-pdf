@@ -193,6 +193,18 @@ jobs:
               name: "GBA_Programming_Tutorial"
               backend-depends: ""
               static-url: "https://gbadev.net/tonc/"
+            - os: "macos-latest"
+              repo: "https://github.com/rust-lang-cn/nomicon-zh-Hans"
+              dir: "nomicon-zh-Hans"
+              name: "nomicon_zh_Hans"
+              backend-depends: ""
+              static-url: "https://nomicon.purewhite.io/"
+            - os: "ubuntu-latest"
+              repo: "https://github.com/rust-lang-cn/nomicon-zh-Hans"
+              dir: "nomicon-zh-Hans"
+              name: "nomicon_zh_Hans"
+              backend-depends: ""
+              static-url: "https://nomicon.purewhite.io/"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -201,7 +213,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
           cache: 'pip'
       - name: Install Chinese Fonts to add support for Chinese books
         if: matrix.os == 'ubuntu-latest'
@@ -326,6 +338,11 @@ jobs:
               name: "GBA_Programming_Tutorial"
               backend-depends: ""
               static-url: "https://gbadev.net/tonc/"
+            - repo: "https://github.com/rust-lang-cn/nomicon-zh-Hans"
+              dir: "nomicon-zh-Hans"
+              name: "nomicon_zh_Hans"
+              backend-depends: ""
+              static-url: "https://nomicon.purewhite.io/"
     runs-on: "windows-latest"
     steps:
       - uses: actions/checkout@v4
@@ -334,7 +351,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
           cache: 'pip'
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
