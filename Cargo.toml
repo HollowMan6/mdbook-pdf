@@ -9,7 +9,7 @@ license = "GPL-3.0"
 name = "mdbook-pdf"
 readme = "README.md"
 repository = "https://github.com/HollowMan6/mdbook-pdf"
-version = "0.1.9"
+version = "0.1.10"
 include = [
     "**/*.rs",
     "Cargo.toml",

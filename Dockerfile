@@ -1,11 +1,11 @@
-FROM rust as builder
+FROM rust AS builder
 COPY . .
 RUN apt update && apt install -y build-essential
 # Install mdbook
 RUN cargo install --git https://github.com/HollowMan6/mdBook mdbook
 RUN cargo install --path .
 
-FROM python as base
+FROM python AS base
 RUN apt-get update \
     && apt-get install -y \
         chromium fonts-wqy-microhei fonts-wqy-zenhei \

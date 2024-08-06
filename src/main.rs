@@ -178,6 +178,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let launch_opts = LaunchOptionsBuilder::default()
             .headless(true)
+            .sandbox(false)
             .devtools(false)
             .idle_browser_timeout(Duration::from_secs(cfg.timeout))
             .path(browser_binary)
