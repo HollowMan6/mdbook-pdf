@@ -170,6 +170,14 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 
 接受输入一个布尔值，默认为`false`。其指定是否使用 CSS 定义的页面大小。`true`为使用，`false`时页面将通过缩放来适应纸张大小。
 
+- generate-document-outline
+
+接受输入一个布尔值，默认为`true`。其指定是否根据网页生成PDF目录。
+
+- generate-tagged-pdf
+
+接受输入一个布尔值，默认为`true`。其指定是否根据网页生成PDF标记。
+
 ## 常见问题
 1. 让`mdbook-pdf`支持火狐！
 目前，尽管 Puppeteer 根据其[文档](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)，已经支持类似于[Chrome 开发工具协议 Page.printToPDF](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF)的东西，[rust-headless-chrome](https://github.com/rust-headless-chrome/rust-headless-chrome) 并没有。
@@ -180,30 +188,35 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 
 如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L19-L20)以便修复。
 
-3. 可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？
+3. ~~可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？~~
 
-~~这应该由 Chromium 实现，并且目前已经有人为此提交了一个[议题](https://issues.chromium.org/issues/40038778)。
+这已经由 Chromium 实现，现在，在`v0.1.11+`中，您可以通过`generate-document-outline`选项控制。
 
-已经初步实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)）. 它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`和常见问题2中提到的修复了`print.html`中损坏链接的[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738)（通过 `cargo install --git https://github.com/HollowMan6/mdBook mdbook`安装）一起使用。
-
-您可以通过`pip install mdbook-pdf-outline`安装此后端。
-
-记住将以下内容放在`book.toml`的 ***末尾，[output.pdf]之后***：
-
-```toml
-[output.pdf-outline]
-```
-
-如果您想使PDF目录与`print.html`页面中显示的目录相同，则无需进一步修改`book.toml`。
-
-如果您希望使使PDF目录与`wkhtmltopdf`生成的目录相同（根据标题生成条目），则可以通过在`book.toml`中使用以下配置来启用`like-wkhtmltopdf`选项：
-
-```toml
-[output.pdf-outline]
-like-wkhtmltopdf = true
-```
-
-最后，您可以在`book/pdfoutline/output.pdf`中找到带有大纲/目录的版本。
+> [!NOTE]
+> 如果您不喜欢 Chromium 的实现方案，我们还自己实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)）。它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`和常见问题2中提到的修复了`print.html`中损坏链接的[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738)（通过 `cargo install --git https://github.com/HollowMan6/mdBook mdbook`安装）一起使用。
+> 
+> 您可以通过`pip install mdbook-pdf-outline`安装此后端。
+> 
+> 记住将以下内容放在`book.toml`的 ***末尾，[output.pdf]之后***，并禁用`generate-document-outline`选项：
+> 
+> ```toml
+> generate-document-outline = false
+> 
+> [output.pdf-outline]
+> ```
+> 
+> 如果您想使PDF目录与`print.html`页面中显示的目录相同，则无需进一步修改`book.toml`。
+> 
+> 如果您希望使使PDF目录与`wkhtmltopdf`生成的目录相同（根据标题生成条目），则可以通过在`book.toml`中使用以下配置来启用`like-wkhtmltopdf`选项：
+> 
+> ```toml
+> generate-document-outline = false
+> 
+> [output.pdf-outline]
+> like-wkhtmltopdf = true
+> ```
+> 
+> 最后，您可以在`book/pdfoutline/output.pdf`中找到带有大纲/目录的版本。
 
 4. 在 mdbook-pdf 所遵循的 Markdown 源中强制分页！
 

@@ -8,7 +8,7 @@
   Author:  Hollow Man <hollowman@opensuse.org>
   License: GPL-3.0
 
-  Copyright © 2022-2023 Hollow Man (@HollowMan6). All rights reserved.
+  Copyright © 2022-2025 Hollow Man (@HollowMan6). All rights reserved.
 
   This document is free software; you can redistribute it and/or modify it under the terms of the GNU General
   Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option)
@@ -29,6 +29,7 @@ import lxml.html
 import re
 import json
 import sys
+import os
 
 
 buffer = []
@@ -154,18 +155,30 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
                 parent_dict, level, writer, head.text_content(), page, fit
             )
 
+def lxml_parse(data):
+    root = lxml.html.fromstring(data)
+    return root.find_class("chapter")
 
 def add_toc_outline(html_page, reader, writer):
     parent_dict = {"node": None, "child": {}}
+    found_toc = False
     with open(html_page, "r", encoding="utf8") as f:
-        data = f.read()
-        root = lxml.html.fromstring(data)
-        results = root.find_class("chapter")
         # Table of contents
-        for result in results:
+        for result in lxml_parse(f.read()):
             parse_toc(result, reader, writer, parent_dict)
+            found_toc = True
             break
 
+    if found_toc:
+        return
+
+    with open(os.path.join(os.path.dirname(html_page), "toc.js"), "r", encoding="utf8") as f:
+        match = re.compile(r"this\.innerHTML\s*=\s*'([^']*)';").search(f.read())
+        if match:
+            for result in lxml_parse(match.group(1)):
+                parse_toc(result, reader, writer, parent_dict)
+                found_toc = True
+                break
 
 def main():
     sys.stdin.reconfigure(encoding="utf8")

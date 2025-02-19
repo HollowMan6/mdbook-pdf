@@ -250,6 +250,7 @@ jobs:
             echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
             echo "header-template = \"<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>\"" >> book.toml
             echo "footer-template = \"<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>\"" >> book.toml
+            echo "generate-document-outline = false" >> book.toml
             echo "[output.pdf-outline]" >> book.toml
           fi
           mdbook build
@@ -382,6 +383,7 @@ jobs:
           echo "static-site-url = '${{ matrix.static-url }}'" >> book.toml
           echo "header-template = `"<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>`"" >> book.toml
           echo "footer-template = `"<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>`"" >> book.toml
+          echo "generate-document-outline = false" >> book.toml
           echo "[output.pdf-outline]" >> book.toml
           mdbook build
       - name: Upload PDF File to Artifact

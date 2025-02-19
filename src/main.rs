@@ -5,7 +5,7 @@
  * Author:  Hollow Man <hollowman@opensuse.org>
  * License: GPL-3.0
  *
- * Copyright (C) 2022-2023 Hollow Man (@HollowMan6)
+ * Copyright (C) 2022-2025 Hollow Man (@HollowMan6)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -183,7 +183,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .idle_browser_timeout(Duration::from_secs(cfg.timeout))
             .path(browser_binary)
             .args(vec![
-                OsStr::new("--disable-pdf-tagging"),
                 OsStr::new("--unlimited-storage"),
                 OsStr::new("--webkit-print-color-adjust"),
             ])
@@ -205,6 +204,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             header_template: Some(cloned_cfg.header_template),
             footer_template: Some(cloned_cfg.footer_template),
             prefer_css_page_size: Some(cloned_cfg.prefer_css_page_size),
+            generate_document_outline: Some(cloned_cfg.generate_document_outline),
+            generate_tagged_pdf: Some(cloned_cfg.generate_tagged_pdf),
             transfer_mode: None,
         };
 
@@ -303,6 +304,8 @@ pub struct PrintOptions {
     pub header_template: String,
     pub footer_template: String,
     pub prefer_css_page_size: bool,
+    pub generate_document_outline: bool,
+    pub generate_tagged_pdf: bool,
 }
 
 /**
@@ -333,6 +336,8 @@ impl Default for PrintOptions {
             header_template: "".to_string(),
             footer_template: "".to_string(),
             prefer_css_page_size: false,
+            generate_document_outline: true,
+            generate_tagged_pdf: true,
         }
     }
 }

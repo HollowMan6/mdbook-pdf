@@ -37,6 +37,8 @@ ignore-invalid-page-ranges = false
 header-template = "<h3 style='font-size:8px; margin-left: 48%' class='title'></h3>"
 footer-template = "<p style='font-size:10px; margin-left: 48%'><span class='pageNumber'></span> / <span class='totalPages'></span></p>"
 prefer-css-page-size = true
+generate-document-outline = false
+generate-tagged-pdf = true
 
 [output.pdf-outline]
 like-wkhtmltopdf = false

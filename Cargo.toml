@@ -9,7 +9,7 @@ license = "GPL-3.0"
 name = "mdbook-pdf"
 readme = "README.md"
 repository = "https://github.com/HollowMan6/mdbook-pdf"
-version = "0.1.10"
+version = "0.1.11"
 include = [
     "**/*.rs",
     "Cargo.toml",
@@ -23,7 +23,6 @@ headless_chrome = "1"
 regex = "1"
 serde = "1"
 serde_derive = "1"
-auto_generate_cdp = "=0.4.4"
 
 [features]
 # Enables auto fetching chromium support.
