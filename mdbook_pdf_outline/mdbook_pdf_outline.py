@@ -88,7 +88,8 @@ def add_wkhtmltopdf_like_outline(html_page, reader, writer):
             if not results.tag[1:].isdigit():
                 continue
             level = int(results.tag[1:])
-            dest = reader.named_destinations["/{}".format(urllib.parse.quote(id))]
+            dest = reader.named_destinations["/{}".format(
+                urllib.parse.quote(id))]
 
             page = None
             fit = None
@@ -128,7 +129,8 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
             dest = None
             if "href" in target_element.attrib:
                 for content in target_element.attrib["href"].split("#"):
-                    dest_name += content.removesuffix(".html").replace("/", "-") + "-"
+                    dest_name += content.removesuffix(
+                        ".html").replace("/", "-") + "-"
                 dest_name = dest_name.rstrip("-")
                 dest_name = "/{}".format(urllib.parse.quote(dest_name.lower()))
 
@@ -155,9 +157,11 @@ def parse_toc(toc, reader, writer, parent_dict, level=1):
                 parent_dict, level, writer, head.text_content(), page, fit
             )
 
+
 def lxml_parse(data):
     root = lxml.html.fromstring(data)
     return root.find_class("chapter")
+
 
 def add_toc_outline(html_page, reader, writer):
     parent_dict = {"node": None, "child": {}}
@@ -173,12 +177,14 @@ def add_toc_outline(html_page, reader, writer):
         return
 
     with open(os.path.join(os.path.dirname(html_page), "toc.js"), "r", encoding="utf8") as f:
-        match = re.compile(r"this\.innerHTML\s*=\s*'([^']*)';").search(f.read())
+        match = re.compile(
+            r"this\.innerHTML\s*=\s*'([^']*)';").search(f.read())
         if match:
             for result in lxml_parse(match.group(1)):
                 parse_toc(result, reader, writer, parent_dict)
                 found_toc = True
                 break
+
 
 def main():
     sys.stdin.reconfigure(encoding="utf8")
