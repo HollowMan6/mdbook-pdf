@@ -19,11 +19,14 @@ include = [
 env_logger = "0"
 lazy_static = "1"
 mdbook = "0"
-headless_chrome = "1"
+# Fork headless_chrome for PR #540
+# headless_chrome = "1"
+mdbook-pdf-headless_chrome = "0"
 regex = "1"
 serde = "1"
 serde_derive = "1"
 
 [features]
 # Enables auto fetching chromium support.
-fetch = ["headless_chrome/fetch"]
+# fetch = ["headless_chrome/fetch"]
+fetch = ["mdbook-pdf-headless_chrome/fetch"]
