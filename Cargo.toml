@@ -2,7 +2,7 @@
 authors = ["Hollow Man <hollowman@opensuse.org>"]
 categories = ["text-processing", "command-line-interface"]
 description = "A backend for mdBook written in Rust for generating PDF based on headless chrome and Chrome DevTools Protocol"
-edition = "2021"
+edition = "2024"
 homepage = "https://hollowmansblog.wordpress.com/2022/01/30/mdbook-pdf-a-mdbook-backend-for-generating-pdf-files/"
 keywords = ["book", "mdbook", "rustbook", "pdf"]
 license = "GPL-3.0"
@@ -19,14 +19,11 @@ include = [
 env_logger = "0"
 lazy_static = "1"
 mdbook = "0"
-# Fork headless_chrome for PR #540
-# headless_chrome = "1"
-mdbook-pdf-headless_chrome = "0"
+headless_chrome = "1"
 regex = "1"
 serde = "1"
 serde_derive = "1"
 
 [features]
 # Enables auto fetching chromium support.
-# fetch = ["headless_chrome/fetch"]
-fetch = ["mdbook-pdf-headless_chrome/fetch"]
+fetch = ["headless_chrome/fetch"]
