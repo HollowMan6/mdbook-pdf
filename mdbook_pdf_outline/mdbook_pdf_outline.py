@@ -167,8 +167,9 @@ def add_toc_outline(html_page, reader, writer):
     parent_dict = {"node": None, "child": {}}
     found_toc = False
     with open(html_page, "r", encoding="utf8") as f:
+        data = f.read()
         # Table of contents
-        for result in lxml_parse(f.read()):
+        for result in lxml_parse(data):
             parse_toc(result, reader, writer, parent_dict)
             found_toc = True
             break
@@ -176,14 +177,24 @@ def add_toc_outline(html_page, reader, writer):
     if found_toc:
         return
 
-    with open(os.path.join(os.path.dirname(html_page), "toc.js"), "r", encoding="utf8") as f:
-        match = re.compile(
-            r"this\.innerHTML\s*=\s*'([^']*)';").search(f.read())
-        if match:
-            for result in lxml_parse(match.group(1)):
-                parse_toc(result, reader, writer, parent_dict)
-                found_toc = True
-                break
+    # Parse print.html to find the actual "toc-xxxx.js" file
+    root = lxml.html.fromstring(data)
+    scripts = root.xpath('//script[starts-with(@src, "toc-")]/@src')
+    if not scripts:
+        scripts = ["toc.js"]
+
+    for script in scripts:
+        try:
+            with open(os.path.join(os.path.dirname(html_page), script), "r", encoding="utf8") as f:
+                match = re.compile(
+                    r"this\.innerHTML\s*=\s*'([^']*)';").search(f.read())
+                if match:
+                    for result in lxml_parse(match.group(1)):
+                        parse_toc(result, reader, writer, parent_dict)
+                        # Once a ToC is found, we can return
+                        return
+        except FileNotFoundError:
+            pass
 
 
 def main():
