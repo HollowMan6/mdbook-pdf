@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-use headless_chrome::{types::PrintToPdfOptions, Browser, LaunchOptionsBuilder};
+use headless_chrome::{Browser, LaunchOptionsBuilder, types::PrintToPdfOptions};
 use lazy_static::lazy_static;
 use mdbook::renderer::RenderContext;
 use regex::Regex;
@@ -61,7 +61,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "PDF generation failed. The print.html file does not exist at {}.",
             print_html_path
         );
-        println!("Verify output.html is active and output.html.print.enabled is set to true in your book.toml.");
+        println!(
+            "Verify output.html is active and output.html.print.enabled is set to true in your book.toml."
+        );
         return Err(Box::<io::Error>::from(io::Error::new(
             io::ErrorKind::NotFound,
             format!("File not found: {}", print_html_path),
@@ -222,7 +224,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "document.querySelector('a.cookieBarConsentButton').click()",
                 false,
             )?;
-            println!("The book you built uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic.");
+            println!(
+                "The book you built uses cookies from Google to deliver and enhance the quality of its services and to analyze traffic."
+            );
             println!("Learn more at: https://policies.google.com/technologies/cookies");
         };
 
@@ -312,7 +316,6 @@ pub struct PrintOptions {
  * Refer to https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
  * for the default values and meanings of the params for Page.PrintToPDF
  */
-
 impl Default for PrintOptions {
     fn default() -> Self {
         PrintOptions {
