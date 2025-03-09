@@ -17,8 +17,14 @@ env:
 
 jobs:
   # Pack Extension and Upload
-  push:
+  pypi-publish:
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mdbook-pdf-outline
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -82,7 +88,5 @@ jobs:
           name: ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
           path: ${{ env.NAME }}-${{ env.VERSION_NUM }}-py3-none-any.whl
 
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@unstable/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
