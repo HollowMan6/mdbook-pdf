@@ -113,13 +113,13 @@ jobs:
               repo: "https://github.com/rust-lang/book"
               dir: "book"
               name: "Rust_Programming_Language"
-              backend-depends: ""
+              backend-depends: "--path book/packages/mdbook-trpl"
               static-url: "https://doc.rust-lang.org/book/"
             - os: "ubuntu-latest"
               repo: "https://github.com/rust-lang/book"
               dir: "book"
               name: "Rust_Programming_Language"
-              backend-depends: ""
+              backend-depends: "--path book/packages/mdbook-trpl"
               static-url: "https://doc.rust-lang.org/book/"
             - os: "macos-latest"
               repo: "https://github.com/rust-lang/rustc-dev-guide"
@@ -225,6 +225,9 @@ jobs:
         run: |
           sudo apt update
           sudo apt install fonts-wqy-microhei fonts-wqy-zenhei
+      - name: Clone book repo
+        run: |
+          git clone --recurse-submodules ${{ matrix.repo }}
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
         run: |
@@ -240,7 +243,6 @@ jobs:
           mv target/debug/mdbook-pdf /usr/local/bin/
       - name: Build Test Docs for PDF
         run: |
-          git clone --recurse-submodules ${{ matrix.repo }}
           cd ${{ matrix.dir }}
           if [ `grep -c "output.pdf" book.toml` -eq '0' ]; then
             echo "[output.pdf]" >> book.toml
@@ -317,7 +319,7 @@ jobs:
             - repo: "https://github.com/rust-lang/book"
               dir: "book"
               name: "Rust_Programming_Language"
-              backend-depends: ""
+              backend-depends: "--path book/packages/mdbook-trpl"
               static-url: "https://doc.rust-lang.org/book/"
             - repo: "https://github.com/rust-lang/rust"
               dir: "rust/src/doc/rustdoc"
@@ -364,6 +366,9 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
+      - name: Clone book repo
+        run: |
+          git clone --recurse-submodules ${{ matrix.repo }}
       - name: Install mdbook related backend
         if: matrix.backend-depends != ''
         run: |
@@ -378,7 +383,6 @@ jobs:
           cp target/debug/mdbook-pdf.exe .
       - name: Build Test Docs for PDF
         run: |
-          git clone --recurse-submodules ${{ matrix.repo }}
           $env:Path += ";$pwd"
           cd ${{ matrix.dir }}
           echo "[output.pdf]" >> book.toml
