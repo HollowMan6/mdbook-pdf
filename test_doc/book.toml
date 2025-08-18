@@ -1,7 +1,6 @@
 [book]
 authors = ["Hollow Man"]
 language = "en"
-multilingual = false
 src = "src"
 title = "An Example"
 

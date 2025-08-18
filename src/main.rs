@@ -22,7 +22,8 @@
  */
 use headless_chrome::{Browser, LaunchOptionsBuilder, types::PrintToPdfOptions};
 use lazy_static::lazy_static;
-use mdbook::renderer::RenderContext;
+use mdbook_core::book::BookItem::Chapter;
+use mdbook_renderer::RenderContext;
 use regex::Regex;
 use std::io::{BufReader, BufWriter, Read, Write};
 use std::{ffi::OsStr, fs, io, path::PathBuf, thread, time::Duration};
@@ -39,11 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Get the configs
     let ctx = RenderContext::from_json(&mut stdin).unwrap();
-    let cfg: PrintOptions = ctx
-        .config
-        .get_deserialized_opt("output.pdf")
-        .unwrap()
-        .unwrap();
+    let cfg = &ctx.config.outputs::<PrintOptions>()?["pdf"];
 
     let print_html_path = ctx
         .destination
@@ -83,7 +80,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // contains the destination for ToC to locate the specific page in pdf.
     let mut toc_fix = "<div style=\"display: none\">".to_owned();
     for item in ctx.book.iter() {
-        if let mdbook::book::BookItem::Chapter(chapter) = item {
+        if let Chapter(chapter) = item {
             let path = chapter.path.clone();
             if let Some(path) = path {
                 let print_page_id = {
