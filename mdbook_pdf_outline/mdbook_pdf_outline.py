@@ -208,10 +208,10 @@ def main():
     writer = PdfWriter()
     writer.append(reader)
 
-    if "like-wkhtmltopdf" in conf and conf["like-wkhtmltopdf"]:
-        add_wkhtmltopdf_like_outline("../html/print.html", reader, writer)
-    else:
+    if "like-wkhtmltopdf" in conf and not conf["like-wkhtmltopdf"]:
         add_toc_outline("../html/print.html", reader, writer)
+    else:
+        add_wkhtmltopdf_like_outline("../html/print.html", reader, writer)
 
     meta = context["config"]["book"]
     try:

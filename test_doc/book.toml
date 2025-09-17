@@ -40,4 +40,4 @@ generate-document-outline = false
 generate-tagged-pdf = true
 
 [output.pdf-outline]
-like-wkhtmltopdf = false
+like-wkhtmltopdf = true

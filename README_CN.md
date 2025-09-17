@@ -188,7 +188,7 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 
 如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L19-L20)以便修复。
 
-1. ~~可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？~~
+3. ~~可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？~~
 
 这已经由 Chromium 实现，现在，在`v0.1.11+`中，您可以通过`generate-document-outline`选项控制。
 
@@ -205,20 +205,20 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 > [output.pdf-outline]
 > ```
 > 
-> 如果您想使PDF目录与`print.html`页面中显示的目录相同，则无需进一步修改`book.toml`。
+> 如果您希望使PDF目录与`wkhtmltopdf`生成的目录相同（根据标题生成条目），则则无需进一步修改`book.toml`：
 > 
-> 如果您希望使使PDF目录与`wkhtmltopdf`生成的目录相同（根据标题生成条目），则可以通过在`book.toml`中使用以下配置来启用`like-wkhtmltopdf`选项：
+> 如果您想使PDF目录与`print.html`页面中显示的目录相同，可以通过在`book.toml`中禁用`like-wkhtmltopdf`选项（注意：此功能只在mdbook v0.5.0 之前修复了`print.html`中损坏链接的旧版[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738)可用，你可以通过 `cargo install --git https://github.com/HollowMan6/mdBook mdbook`安装。
 > 
 > ```toml
 > generate-document-outline = false
 > 
 > [output.pdf-outline]
-> like-wkhtmltopdf = true
+> like-wkhtmltopdf = false
 > ```
 > 
 > 最后，您可以在`book/pdfoutline/output.pdf`中找到带有大纲/目录的版本。
 
-1. 在 mdbook-pdf 所遵循的 Markdown 源中强制分页！
+4. 在 mdbook-pdf 所遵循的 Markdown 源中强制分页！
 
 参考[#9](https://github.com/HollowMan6/mdbook-pdf/discussions/9#discussioncomment-4895678)，您可以使用以下语法在markdown源中强制分页：
 
