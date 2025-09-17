@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "mdbook-pdf" do |subconfig|
     # Set box and hostname
-    subconfig.vm.box = "ubuntu/jammy64"    
+    subconfig.vm.box = "ubuntu/jammy64"
     subconfig.vm.hostname = "mdbook-pdf"
     # subconfig.vm.provider "virtualbox" do |vb|
     #   # Custom VM memory and CPU cores
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
       sudo pip3 install /vagrant
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       source "$HOME/.cargo/env"
-      cargo install --git https://github.com/HollowMan6/mdBook mdbook
+      cargo install --git https://github.com/rust-lang/mdBook mdbook
       cargo install --path /vagrant
       cp -r /book ~/book
       cd ~/book && mdbook build

@@ -184,16 +184,16 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 
 2. 链接损坏！
 
-我已经提交了[一个 mdBook 的拉取请求](https://github.com/rust-lang/mdBook/pull/1738)，该拉取请求通过将打印页面 (print.html) 上的链接指向打印页面上的锚点来解决此问题，但尚未合并。您可以尝试[我的拉取请求分支](https://github.com/HollowMan6/mdBook) 以使其正常工作。
+~~我已经提交了[一个 mdBook 的拉取请求](https://github.com/rust-lang/mdBook/pull/1738)，该拉取请求通过将打印页面 (print.html) 上的链接指向打印页面上的锚点来解决此问题，但尚未合并。您可以尝试[我的拉取请求分支](https://github.com/HollowMan6/mdBook) 以使其正常工作。~~ 在最新的 `mdbook` (v0.5.0+) 中已经修复。
 
 如果你的书中有书以外的相对路径链接，请提供[静态网站托管URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L19-L20)以便修复。
 
-3. ~~可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？~~
+1. ~~可以像[wkhtmltopdf](https://wkhtmltopdf.org/)支持的那样，在PDF中添加书签来反映目录吗？~~
 
 这已经由 Chromium 实现，现在，在`v0.1.11+`中，您可以通过`generate-document-outline`选项控制。
 
 > [!NOTE]
-> 如果您不喜欢 Chromium 的实现方案，我们还自己实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)）。它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf`和常见问题2中提到的修复了`print.html`中损坏链接的[mdbook版本](https://github.com/rust-lang/mdBook/pull/1738)（通过 `cargo install --git https://github.com/HollowMan6/mdBook mdbook`安装）一起使用。
+> 如果您不喜欢 Chromium 的实现方案，我们还自己实现了对PDF文件书签/大纲的支持（[mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)）。它是`mdbook`的另一个后端，用Python编写，应与`mdbook-pdf` 一起使用。
 > 
 > 您可以通过`pip install mdbook-pdf-outline`安装此后端。
 > 
@@ -218,7 +218,7 @@ docker run --rm -v /path/to/book:/book -v ~/.cargo/bin:/mdbook hollowman6/mdbook
 > 
 > 最后，您可以在`book/pdfoutline/output.pdf`中找到带有大纲/目录的版本。
 
-4. 在 mdbook-pdf 所遵循的 Markdown 源中强制分页！
+1. 在 mdbook-pdf 所遵循的 Markdown 源中强制分页！
 
 参考[#9](https://github.com/HollowMan6/mdbook-pdf/discussions/9#discussioncomment-4895678)，您可以使用以下语法在markdown源中强制分页：
 

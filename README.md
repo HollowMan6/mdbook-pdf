@@ -91,7 +91,7 @@ Currently, although Puppeteer supports something similar to [Chrome DevTools Pro
 
 2. Broken links!
 
-I've already submitted [a PR for mdBook](https://github.com/rust-lang/mdBook/pull/1738) to fix this by making print page (print.html) links link to anchors on the print page, but it's not merged yet. You can try [my PR fork](https://github.com/HollowMan6/mdBook) for this to work.
+~~I've already submitted [a PR for mdBook](https://github.com/rust-lang/mdBook/pull/1738) to fix this by making print page (print.html) links link to anchors on the print page, but it's not merged yet. You can try [my PR fork](https://github.com/HollowMan6/mdBook) for this to work.~~ Should be fixed in the latest `mdbook` (v0.5.0+).
 
 If you have relative links that link outside the book, please provide the [static hosting site URL](https://github.com/HollowMan6/mdbook-pdf/blob/main/test_doc/book.toml#L19-L20) for it to get fixed.
 
@@ -100,7 +100,7 @@ If you have relative links that link outside the book, please provide the [stati
 This has already been realized by Chromium, in `v0.1.11+`, you can control it by the `generate-document-outline` option.
 
 > [!NOTE]
-> If you dislike the Chromium generated Table of Contents, we also have support for the bookmark/outline of the PDF file ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used with `mdbook-pdf` and ***the [modified mdbook](https://github.com/rust-lang/mdBook/pull/1738) mentioned in Common Issues 2 (by `cargo install --git https://github.com/HollowMan6/mdBook mdbook` instead) for fixing the broken links in `print.html`***.
+> If you dislike the Chromium generated Table of Contents, we also have support for the bookmark/outline of the PDF file ([mdbook-pdf-outline](https://pypi.org/project/mdbook-pdf-outline/)). It is written in Python and is another backend for `mdbook` and should be used together with `mdbook-pdf`.
 > 
 > You can install this backend by `pip install mdbook-pdf-outline`.
 > 

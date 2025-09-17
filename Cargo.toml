@@ -18,8 +18,8 @@ include = [
 [dependencies]
 env_logger = "0"
 lazy_static = "1"
-mdbook-renderer = { git = "https://github.com/HollowMan6/mdbook.git" }
-mdbook-core = { git = "https://github.com/HollowMan6/mdbook.git" }
+mdbook-renderer = { git = "https://github.com/rust-lang/mdbook.git" }
+mdbook-core = { git = "https://github.com/rust-lang/mdbook.git" }
 headless_chrome = "1"
 regex = "1"
 serde = "1"

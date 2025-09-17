@@ -234,7 +234,7 @@ jobs:
           cargo install ${{ matrix.backend-depends }}
       - name: Build and install mdbook executable
         run: |
-          cargo install -f --git https://github.com/HollowMan6/mdBook mdbook
+          cargo install -f --git https://github.com/rust-lang/mdBook mdbook
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
@@ -375,7 +375,7 @@ jobs:
           cargo install ${{ matrix.backend-depends }}
       - name: Build and install mdbook executable
         run: |
-          cargo install -f --git https://github.com/HollowMan6/mdBook mdbook
+          cargo install -f --git https://github.com/rust-lang/mdBook mdbook
       - name: Build mdbook-pdf dev and install
         run: |
           cargo build
