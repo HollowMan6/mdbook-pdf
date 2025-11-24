@@ -30,7 +30,7 @@ jobs:
           #   os: "ubuntu-latest"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -71,7 +71,7 @@ jobs:
       matrix:
           target: ["x86_64-pc-windows-msvc", "x86_64-pc-windows-gnu", "aarch64-pc-windows-msvc", "i686-pc-windows-msvc"]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -113,7 +113,7 @@ jobs:
           - "aarch64-unknown-linux-gnu"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - name: Set up QEMU
