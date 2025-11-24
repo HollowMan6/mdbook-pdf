@@ -195,7 +195,7 @@ jobs:
               static-url: "https://nomicon.purewhite.io/"
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -336,7 +336,7 @@ jobs:
               static-url: "https://nomicon.purewhite.io/"
     runs-on: "windows-latest"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
