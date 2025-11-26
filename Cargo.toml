@@ -9,7 +9,7 @@ license = "GPL-3.0"
 name = "mdbook-pdf"
 readme = "README.md"
 repository = "https://github.com/HollowMan6/mdbook-pdf"
-version = "0.1.11"
+version = "0.1.12"
 include = [
     "**/*.rs",
     "Cargo.toml",
@@ -18,8 +18,8 @@ include = [
 [dependencies]
 env_logger = "0"
 lazy_static = "1"
-mdbook-renderer = { git = "https://github.com/rust-lang/mdbook.git" }
-mdbook-core = { git = "https://github.com/rust-lang/mdbook.git" }
+mdbook-renderer = "0"
+mdbook-core = "0"
 headless_chrome = "1"
 regex = "1"
 serde = "1"

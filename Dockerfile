@@ -2,7 +2,7 @@ FROM rust AS builder
 COPY . .
 RUN apt update && apt install -y build-essential
 # Install mdbook
-RUN cargo install --git https://github.com/rust-lang/mdBook mdbook
+RUN cargo install mdbook
 RUN cargo install --path .
 
 FROM python AS base
